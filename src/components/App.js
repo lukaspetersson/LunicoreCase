@@ -9,8 +9,10 @@ class App extends React.Component {
 		this.state = {
 
 		}
-		this.postUser = this.postUser.bind(this);
-		this.getUser = this.getUser.bind(this);
+		this.addCar = this.addCar.bind(this);
+		this.getCar = this.getCar.bind(this);
+		this.deleteCar = this.deleteCar.bind(this);
+
 	}
 
 	componentDidMount() {
@@ -18,7 +20,7 @@ class App extends React.Component {
 	}
 
 
-	postUser() {
+	addCar() {
 		const sale = {
 			id: 1,
 			employee_id: 2,
@@ -26,7 +28,7 @@ class App extends React.Component {
 		}
 
 		const car = {
-			id: 2,
+			id: 3,
 			brand: "sss",
 			model: "ttt",
 			price: 1900
@@ -34,15 +36,22 @@ class App extends React.Component {
 
 		console.log(car);
 
-	   axios.delete('http://localhost:5000/carmodels/delete/'+2, 2)
+
+	   axios.post('http://localhost:5000/carmodels/add', car)
 		 .then(res => console.log(res.data))
 		 .catch(err => console.log(err));
 
 	}
 
-	getUser() {
-	   axios.get('http://localhost:5000/sales/')
+	getCar() {
+	   axios.get('http://localhost:5000/carmodels/')
 		 .then(res => console.log(res.data));
+	}
+
+	deleteCar() {
+		axios.delete('http://localhost:5000/carmodels/delete/'+3, 3)
+ 	   .then(res => console.log(res.data))
+ 	   .catch(err => console.log(err));
 	}
 
 
@@ -50,9 +59,11 @@ class App extends React.Component {
 		var test = this;
 		return (
 			<div className="App">
-				<p onClick={()=>{test.postUser()}}>send</p>
+				<p onClick={()=>{test.addCar()}}>send</p>
 
-				<p onClick={()=>{test.getUser()}}>get</p>
+				<p onClick={()=>{test.getCar()}}>get</p>
+
+				<p onClick={()=>{test.deleteCar()}}>delete</p>
 
 			</div>
 		);

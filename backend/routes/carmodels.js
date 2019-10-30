@@ -21,14 +21,14 @@ router.route('/add').post((req, res) => {
 	});
 
 	newCarModel.save()
-	.then(() => res.json('Carmodel added!'))
+	.then(car => res.json(car))
 	.catch(err => res.status(400).json('Error: ' + err));
 });
 
 router.route('/delete/:id').delete((req, res) => {
 	const id = req.params.id;
-	CarModel.remove({ id: id }).exec()
-	.then(() => res.json('Carmodel deleted.'))
+	CarModel.findOneAndRemove({ id: id }).exec()
+	.then(car => res.json(car))
 	.catch(err => res.status(400).json('Error: ' + err));
 
 });

@@ -17,7 +17,7 @@ router.route('/add').post((req, res) => {
     });
 
 	newEmployee.save()
-	.then(() => res.json('Employee added!'))
+	.then(employee => res.json(employee))
 	.catch(err => res.status(400).json('Error: ' + err));
 });
 

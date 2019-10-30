@@ -8,6 +8,6 @@ const salesSchema = new Schema({
     carmodel_id: {type: Number, unique: true},
 });
 
-const Sales = mongoose.model('Sales', salesSchema);
+const Sale = mongoose.model('Sale', salesSchema);
 
-module.exports = Sales;
+module.exports = Sale;

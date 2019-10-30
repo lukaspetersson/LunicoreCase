@@ -3,9 +3,9 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const salesSchema = new Schema({
-	brand: { type: String, required: true ,trim: true},
-    model: { type: String, required: true },
-    price: { type: Number, required: true },
+	id: {type: Number, unique: true},
+	employee_id: {type: Number, unique: true},
+    carmodel_id: {type: Number, unique: true},
 });
 
 const Sales = mongoose.model('Sales', salesSchema);

@@ -4,6 +4,7 @@ import CoverPage from './CoverPage.js'
 import ChatBar from './ChatBar.js'
 import ContactSection from './ContactSection.js'
 import CarModels from './CarModels.js'
+import Employees from './Employees.js'
 
 class FrontPage extends React.Component {
     constructor(props){
@@ -48,11 +49,15 @@ class FrontPage extends React.Component {
                             <CoverPage scrollfromParent={()=>{window.scrollTo(0, this.refCarModels.current.offsetTop)}} setCoverHeight={this.setCoverHeight}/>
                         </div>
 
-                        <div className="experiancesSections" ref={this.refCarModels}>
+                        <div className="contentsSections" ref={this.refCarModels}>
                             <CarModels/>
                         </div>
 
-                        <div className="experiancesSections" ref={this.refContact}>
+						<div className="contentsSections">
+                            <Employees/>
+                        </div>
+
+                        <div className="contentsSections" ref={this.refContact}>
                             <ContactSection/>
                         </div>
                 </div>

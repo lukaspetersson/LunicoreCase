@@ -1,19 +1,18 @@
 import React from 'react';
-import './CarModels.css';
-import car_icon from "./../assets/car_icon.svg"
+import './Employees.css';
+import person_icon from "./../assets/person_icon.svg"
 import arrow_back from "./../assets/arrow_back.svg"
 import arrow_forward from "./../assets/arrow_forward.svg"
 import SmallBlock from "./SmallBlock.js";
 
-class CarModels extends React.Component {
+class Employees extends React.Component {
     constructor(props){
             super(props)
             this.state = {
-                car:{
-                    first:"BMV"+"turbo",
-                    second:"20000",
+                employee:{
+                    first:"Gunnar fixare",
                     image: {
-                      front: car_icon,
+                      front: person_icon,
                     }
                 },
 				arrowStyle:{
@@ -66,27 +65,27 @@ class CarModels extends React.Component {
     }
     render() {
         return (
-            <div className="carBody">
-                <h1>CARMODELS</h1>
-                <img alt="" className="arrowsCar" id="firstArrow" src={arrow_back} onClick={() => this.scrollSide(-1)} style = {this.state.arrowStyle.left}/>
-                <div className="carContainer" ref={this.blocksContainerRef} >
-                    <div className="car">
-                        <SmallBlock info={this.state.car} height={"280px"}/>
+            <div className="employeeBody">
+                <h1>Employees</h1>
+                <img alt="" className="arrowsEmployees" id="firstArrow" src={arrow_back} onClick={() => this.scrollSide(-1)} style = {this.state.arrowStyle.left}/>
+                <div className="employeeContainer" ref={this.blocksContainerRef} >
+                    <div className="employee">
+                        <SmallBlock info={this.state.employee} height={"280px"}/>
                     </div>
-                    <div className="car">
-                        <SmallBlock info={this.state.car} height={"280px"}/>
+                    <div className="employee">
+                        <SmallBlock info={this.state.employee} height={"280px"}/>
                     </div>
-                    <div className="car">
-                        <SmallBlock info={this.state.car} height={"280px"}/>
+                    <div className="employee">
+                        <SmallBlock info={this.state.employee} height={"280px"}/>
                     </div>
-                    <div className="car">
-                        <SmallBlock info={this.state.car} height={"280px"}/>
+                    <div className="employee">
+                        <SmallBlock info={this.state.employee} height={"280px"}/>
                     </div>
                 </div>
-                <img alt="" className="arrowsCar" id="secondArrow" src={arrow_forward}onClick={() => this.scrollSide(1)} style = {this.state.arrowStyle.right}/>
+                <img alt="" className="arrowsEmployees" id="secondArrow" src={arrow_forward}onClick={() => this.scrollSide(1)} style = {this.state.arrowStyle.right}/>
             </div>
         );
         }
 }
 
-export default CarModels;
+export default Employees;

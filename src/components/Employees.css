@@ -1,9 +1,9 @@
-.carBody{
+.employeeBody{
     margin: -15px 0;
     height: auto;
     margin-top: 20px;
 }
-.carContainer{
+.employeeContainer{
     display: inline-block;
     white-space: nowrap;
     width: 100%;
@@ -15,18 +15,18 @@
     -ms-overflow-style: none;
 }
 
-.carContainer::-webkit-scrollbar {
+.employeeContainer::-webkit-scrollbar {
     display: none;
 }
 
-.car{
+.employee{
     display: inline-block;
     position: relative;
     vertical-align:top;
     margin: 10px;
 }
 
-.arrowsCar{
+.arrowsEmployees{
     position: absolute;
     bottom: 202px;
     width: 64px;
@@ -40,11 +40,11 @@
        right:10px;
 }
 
-.carBody h1{
+.employeeBody h1{
   margin: 0px 10px;
 }
 
-.carBody h3{
+.employeeBody h3{
   margin: 20px 10px;
   color: #344346;
 }

@@ -13,34 +13,51 @@ class App extends React.Component {
 		this.getCar = this.getCar.bind(this);
 		this.deleteCar = this.deleteCar.bind(this);
 
+		this.addEmployee = this.addEmployee.bind(this);
+		this.addSale = this.addSale.bind(this);
+
 	}
 
 	componentDidMount() {
 
+		let json = require('./../assets/data.json');
+		axios.get('http://localhost:5000/employees/')
+		.then(res => {
+			if(res.data.length < 1){
+				for (var i = 0; i < json.carshop.carmodels.length; i++) {
+					this.addCar(json.carshop.carmodels[i])
+				}
+				for (var j = 0; j < json.carshop.employees.length; j++) {
+					this.addEmployee(json.carshop.employees[j])
+				}
+				for (var k = 0; k < json.carshop.sales.length; k++) {
+					this.addSale(json.carshop.sales[k])
+				}
+			}else{
+				console.log("Data not empty")
+			}
+		});
+
+
+
 	}
 
-
-	addCar() {
-		const sale = {
-			id: 1,
-			employee_id: 2,
-			carmodel_id: 3,
-		}
-
-		const car = {
-			id: 3,
-			brand: "sss",
-			model: "ttt",
-			price: 1900
-		}
-
-		console.log(car);
-
-
-	   axios.post('http://localhost:5000/carmodels/add', car)
-		 .then(res => console.log(res.data))
+	addSale(sale) {
+	   axios.post('http://localhost:5000/sales/add', sale)
+		 .then(res => console.log("Sale added", res.data))
 		 .catch(err => console.log(err));
+	}
 
+	addEmployee(employee) {
+	   axios.post('http://localhost:5000/employees/add', employee)
+		 .then(res => console.log("Employee added", res.data))
+		 .catch(err => console.log(err));
+	}
+
+	addCar(car) {
+	   axios.post('http://localhost:5000/carmodels/add', car)
+		 .then(res => console.log("Carmodel added",res.data))
+		 .catch(err => console.log(err));
 	}
 
 	getCar() {

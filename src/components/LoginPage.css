@@ -58,9 +58,14 @@ button:hover {
   padding: 10px 18px;
   background-color: #f44336;
 }
+.signUpbtn{
+	width: auto;
+	padding: 10px 18px;
+	background-color: #9c9c9c;
+}
 
 .container {
-  padding: 16px;
+  padding: 3px;
 }
 
 span.psw {
@@ -74,6 +79,9 @@ span.psw {
     float: none;
   }
   .cancelbtn {
+    width: 100%;
+  }
+  .signUpbtn {
     width: 100%;
   }
 }

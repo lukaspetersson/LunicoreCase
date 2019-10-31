@@ -11,11 +11,15 @@ class LoginPage extends React.Component {
 			loginSize:null,
 		}
 		this.login = this.login.bind(this)
+		this.signup = this.signup.bind(this)
 
 	}
 
 	login(){
 		this.setState({loginVisibility:false})
+			console.log("HHHHHHHåpjonå")
+	}
+	signup(){
 			console.log("HHHHHHHåpjonå")
 	}
 	componentDidMount(){
@@ -64,8 +68,8 @@ class LoginPage extends React.Component {
 
 							<label htmlFor="psw"><b>Password</b></label>
 							<input type="password" placeholder="Enter Password" name="psw" required/>
-
 							<button type="button" onClick={()=>{this.login()}}>Login</button>
+							<button type="button" style={{background:"gray"}} onClick={() => this.signup()}>Sign up</button>
 						</div>
 
 						<div className="container">

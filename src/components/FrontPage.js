@@ -5,6 +5,8 @@ import ChatBar from './ChatBar.js'
 import ContactSection from './ContactSection.js'
 import CarModels from './CarModels.js'
 import Employees from './Employees.js'
+import LoginPage from './LoginPage.js'
+
 
 class FrontPage extends React.Component {
     constructor(props){
@@ -44,6 +46,9 @@ class FrontPage extends React.Component {
                 <div className="body">
                         <div className="navigationMenu">
                             <ChatBar menuColor={this.state.menuColor}/>
+                        </div>
+						<div className="loginMenu">
+                             <LoginPage/>
                         </div>
                         <div className="WelcomeSection">
                             <CoverPage scrollfromParent={()=>{window.scrollTo(0, this.refCarModels.current.offsetTop)}} setCoverHeight={this.setCoverHeight}/>

@@ -31,12 +31,11 @@
   font-size:calc(1vw + 2.9vh);
     margin: 0;
 }
-
-.coverBody img:hover{
+.downBtn:hover{
     bottom:0;
 }
 
-.coverBody img {
+.downBtn {
     position: absolute;
     width: calc(4vw + 5vh);
     height: calc(4vw + 5vh);

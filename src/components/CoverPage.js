@@ -2,9 +2,13 @@ import React from 'react';
 import './CoverPage.css';
 import down_logo from "./../assets/down_logo.png"
 
+
 class CoverPage extends React.Component {
     constructor(props){
             super(props)
+			this.state={
+				showLogin:false
+			}
             this.refAboutText = React.createRef()
 			this.refContainer = React.createRef()
     }
@@ -23,19 +27,18 @@ class CoverPage extends React.Component {
         if(this.refAboutText.current){
           var meHeight = this.refAboutText.current.clientHeight;
         }
+			return (
+	          <div>
+	            <div className="coverBody" style={{bottom: meHeight}}>
+	                 <img alt="" className="downBtn" src={down_logo} onClick={() => this.props.scrollfromParent()} />
+	            </div>
+	            <div className="infoContainerCover" ref={this.refAboutText}>
+	              <h1>Bil-Månsson</h1>
+	              <h3>Privatleasa enkelt din nya begagnade bil med Bil-Månsson Komplett Privatleasing. Du väljer mellan 24 eller 36 månaders avtalslängd och bestämmer själv din årliga körsträcka. När avtalsperioden löpt ut lämnar du enkelt tillbaka bilen och kan ta ut en ny.</h3>
+	            </div>
+	            </div>
+	        );
 
-
-        return (
-          <div>
-            <div className="coverBody" style={{bottom: meHeight}}>
-                    <img alt="" src={down_logo} onClick={() => this.props.scrollfromParent()} />
-            </div>
-            <div className="infoContainerCover" ref={this.refAboutText}>
-              <h1>Bil-Månsson</h1>
-              <h3>Privatleasa enkelt din nya begagnade bil med Bil-Månsson Komplett Privatleasing. Du väljer mellan 24 eller 36 månaders avtalslängd och bestämmer själv din årliga körsträcka. När avtalsperioden löpt ut lämnar du enkelt tillbaka bilen och kan ta ut en ny.</h3>
-            </div>
-            </div>
-        );
     }
 }
 

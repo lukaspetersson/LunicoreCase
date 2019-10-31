@@ -11,6 +11,7 @@ class LoginPage extends React.Component {
 			loginVisibility: false,
 			loginSize:null,
 			userName:null,
+			employee: false
 		}
 		this.login = this.login.bind(this)
 		this.signup = this.signup.bind(this)
@@ -18,11 +19,6 @@ class LoginPage extends React.Component {
 
 
 	}
-
-	getUsers() {
-
-	}
-
 	login(){
 		axios.get('http://localhost:5000/users/')
 		 .then(res =>{
@@ -35,6 +31,14 @@ class LoginPage extends React.Component {
 					 exists = true;
 					 if(res.data[i].password === inputPword){
 						 this.setState({loginVisibility:false, userName: inputUname})
+						 axios.get('http://localhost:5000/employees/')
+				 		 .then(resEmployees =>{
+							 for(var j=0; j<resEmployees.data.length;j++){
+								 if(resEmployees.data[j].name === inputUname){
+									 this.setState({employee: true})
+								 }
+							 }
+						  })
 					 }else{
 						 alert("Wrong password");
 					 }
@@ -104,32 +108,47 @@ class LoginPage extends React.Component {
 				visible = "visible"
 				var background = <div className="outsideSpaceLogin" onClick={() => this.setState({loginVisibility:false})}></div>
 			}
-			return (
-				<div>
-					{background}
-					<div className="loginBtn"  onClick={() => this.setState({loginVisibility:true})}>
-						<img alt="" src={person_icon} />
-						<span>{this.state.userName}</span>
+			if(!this.state.userName){
+				return (
+					<div>
+						{background}
+						<div className="loginBtn"  onClick={() => this.setState({loginVisibility:true})}>
+							<img alt="" src={person_icon} />
+							<span>Login</span>
+						</div>
+						<form style={{opacity: showLogin, visibility: visible, right: this.state.loginSize+"vw", left: this.state.loginSize+"vw", bottom: 20-this.state.loginSize/6+"vh"}}>
+							<div className="container" >
+								<label htmlFor="uname"><b>Username</b></label>
+								<input type="text" placeholder="Enter Username" id="uname" required/>
+
+								<label htmlFor="psw"><b>Password</b></label>
+								<input type="password" placeholder="Enter Password" id="pword" required/>
+								<button type="button" onClick={()=>{this.login()}}>Login</button>
+								<button type="button" style={{background:"gray"}} onClick={() => this.signup()}>Sign up</button>
+							</div>
+
+							<div className="container">
+								<button type="button" className="cancelbtn" onClick={() => this.setState({loginVisibility:false})}>Cancel</button>
+								<span className="psw">Forgot password?</span>
+							</div>
+						</form>
 					</div>
-					<form style={{opacity: showLogin, visibility: visible, right: this.state.loginSize+"vw", left: this.state.loginSize+"vw", bottom: 20-this.state.loginSize/6+"vh"}}>
-						<div className="container" >
-							<label htmlFor="uname"><b>Username</b></label>
-							<input type="text" placeholder="Enter Username" id="uname" required/>
+				);
 
-							<label htmlFor="psw"><b>Password</b></label>
-							<input type="password" placeholder="Enter Password" id="pword" required/>
-							<button type="button" onClick={()=>{this.login()}}>Login</button>
-							<button type="button" style={{background:"gray"}} onClick={() => this.signup()}>Sign up</button>
+			}else{
+				return (
+					<div>
+						{background}
+						<div className="loginBtn"  onClick={() => this.setState({loginVisibility:true})}>
+							<img alt="" src={person_icon} />
+							<span>{this.state.userName}</span>
 						</div>
-
-						<div className="container">
-							<button type="button" className="cancelbtn" onClick={() => this.setState({loginVisibility:false})}>Cancel</button>
-							<span className="psw">Forgot password?</span>
+						<div style={{opacity: showLogin, visibility: visible, top:0, right: this.state.loginSize+"vw", left: this.state.loginSize+"vw", bottom: 20-this.state.loginSize/6+"vh"}}>
+						owqvm+omwpmv+wmåvåwmvwåv,w,å,wv
 						</div>
-					</form>
-				</div>
-			);
-
+					</div>
+				);
+			}
 	}
 }
 

@@ -1,0 +1,53 @@
+
+.coverBody{
+    position: absolute;
+    top:0;
+    bottom: 0;
+    left: 0;
+    right:0;
+    color:#ffffff;
+    background-image: url("./../assets/car_wp.jpg");
+    background-size: cover;
+    background-position: center;
+    text-align: center;
+}
+
+.infoContainerCover{
+  position: absolute;
+  bottom: 0;
+  text-align: center;
+  margin: 0;
+  padding: 1% 7%;
+  background-color: #f2f2f2;
+}
+
+.infoContainerCover h3{
+  color: #344346;
+  font-size:calc(0.6vw + 2.1vh);
+  margin: 0;
+}
+
+.infoContainerCover h1{
+  font-size:calc(1vw + 2.9vh);
+    margin: 0;
+}
+
+.coverBody img:hover{
+    bottom:0;
+}
+
+.coverBody img {
+    position: absolute;
+    width: calc(4vw + 5vh);
+    height: calc(4vw + 5vh);
+    cursor: pointer;
+    bottom: 4%;
+    left: 0;
+    right: 0;
+    z-index: 3;
+    transition: 0.5s;
+    -webkit-transition:0.5s;
+    -moz-transition:0.5s;
+    -o-transition:0.5s;
+    margin: auto;
+}

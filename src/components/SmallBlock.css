@@ -1,0 +1,26 @@
+.SmallBlock{
+    width:210px;
+    padding: 0 10px;
+    text-align: center;
+    color: #344346;
+    white-space: normal;
+    cursor: default;
+    background-color: #ffffff;
+}
+
+.SmallBlock img{
+    margin-top: 18px;
+    height: 120px;
+}
+
+.SmallBlock p{
+
+}
+
+.card {
+  box-shadow: 0 4px 8px 0 rgba(0,0,0,0.3);
+}
+
+.card:hover {
+  box-shadow: 0 8px 16px 0 rgba(0,0,0,0.3);
+}

@@ -1,5 +1,6 @@
 import React from 'react';
 import './CarModels.css';
+import car_icon from "./../assets/car_icon.svg"
 import arrow_back from "./../assets/arrow_back.svg"
 import arrow_forward from "./../assets/arrow_forward.svg"
 import SmallBlock from "./SmallBlock.js";
@@ -8,11 +9,11 @@ class CarModels extends React.Component {
     constructor(props){
             super(props)
             this.state = {
-                iesb:{
-                    year:"- 2015",
-                    description:"Choosing IESB is one of the best choices of my life! It improved my english skills enormously and  the diversity of the students taught me different perspectives.",
+                car:{
+                    first:"BMV"+"turbo",
+                    second:"20000",
                     image: {
-                      front: arrow_back,
+                      front: car_icon,
                     }
                 },
 				arrowStyle:{
@@ -70,16 +71,16 @@ class CarModels extends React.Component {
                 <img alt="" className="arrows" id="firstArrow" src={arrow_back} onClick={() => this.scrollSide(-1)} style = {this.state.arrowStyle.left}/>
                 <div className="carContainer" ref={this.blocksContainerRef} >
                     <div className="car">
-                        <SmallBlock info={this.state.iesb} height={"380px"}/>
+                        <SmallBlock info={this.state.car} height={"280px"}/>
                     </div>
                     <div className="car">
-                        <SmallBlock info={this.state.iesb} height={"380px"}/>
+                        <SmallBlock info={this.state.car} height={"280px"}/>
                     </div>
                     <div className="car">
-                        <SmallBlock info={this.state.iesb} height={"380px"}/>
+                        <SmallBlock info={this.state.car} height={"280px"}/>
                     </div>
                     <div className="car">
-                        <SmallBlock info={this.state.iesb} height={"380px"}/>
+                        <SmallBlock info={this.state.car} height={"280px"}/>
                     </div>
                 </div>
                 <img alt="" className="arrows" id="secondArrow" src={arrow_forward}onClick={() => this.scrollSide(1)} style = {this.state.arrowStyle.right}/>

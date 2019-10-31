@@ -7,8 +7,8 @@ class SmallBlock extends React.Component {
   		  <div className="card" style={{height:this.props.height}}>
   				<div className="SmallBlock" style={{height:this.props.height}}>
   					<img alt="" src={this.props.info.image.front}/>
-  					 <p>{this.props.info.year}</p>
-  					<p>{this.props.info.description}</p>
+  					 <p>{this.props.info.first}</p>
+  					<p>{this.props.info.second}</p>
   				</div>
   		  </div>
   	  );

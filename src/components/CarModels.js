@@ -25,6 +25,7 @@ class CarModels extends React.Component {
 		this.resize = this.resize.bind(this);
 		this.scrollSide = this.scrollSide.bind(this);
 		this.getCars = this.getCars.bind(this);
+		this.deleteCar = this.deleteCar.bind(this);
 	}
 
 	getCars() {
@@ -35,7 +36,8 @@ class CarModels extends React.Component {
 				var car ={
 					first: res.data[i].brand,
 					second: res.data[i].price,
-					image: car_icon
+					image: car_icon,
+					id: res.data[i].id,
 				}
 				cars[i] = car;
 			}
@@ -43,6 +45,12 @@ class CarModels extends React.Component {
 				carmodels: cars
 			});
 		});
+	}
+
+	deleteCar(id) {
+		axios.delete('http://localhost:5000/carmodels/delete/'+id, id)
+ 	   .then(res => console.log(res.data))
+ 	   .catch(err => console.log(err));
 	}
 
 	componentDidMount() {
@@ -83,7 +91,8 @@ class CarModels extends React.Component {
 	render() {
 		var renderCars = [];
 		for(var i=0; i < this.state.carmodels.length; i++){
-			renderCars[i] = <div className="car" key={i}><SmallBlock info={this.state.carmodels[i]} height={"280px"}/></div>
+			var car = this.state.carmodels[i];
+			renderCars[i] = <div className="car" key={i}><SmallBlock removeFunction={(id)=>{this.deleteCar(id)}} removeOption={this.props.isEmployee} info={car} height={"280px"}/></div>
 		}
 		return (
 			<div className="carBody">

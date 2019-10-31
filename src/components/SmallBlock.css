@@ -8,7 +8,16 @@
     background-color: #ffffff;
 }
 
-.SmallBlock img{
+.cross{
+	display: block;
+	position: absolute;
+	top:10px;
+	right:10px;
+	width: 30px;
+	cursor: pointer;
+}
+
+.displayImg{
     margin-top: 18px;
     height: 120px;
 }

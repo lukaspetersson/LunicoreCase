@@ -15,9 +15,24 @@ class LoginPage extends React.Component {
 		}
 		this.login = this.login.bind(this)
 		this.signup = this.signup.bind(this)
+		this.employeeCheck = this.employeeCheck.bind(this)
 
 
 
+	}
+	employeeCheck(uname){
+		this.setState({loginVisibility:false, userName: uname})
+		axios.get('http://localhost:5000/employees/')
+		.then(resEmployees =>{
+			var isEmployee = false;
+			for(var j=0; j<resEmployees.data.length; j++){
+				if(resEmployees.data[j].name === uname){
+					isEmployee=true;
+					this.setState({employee: true})
+				}
+			}
+			this.props.setUserFromParent(uname, isEmployee)
+		 })
 	}
 	login(){
 		axios.get('http://localhost:5000/users/')
@@ -30,15 +45,7 @@ class LoginPage extends React.Component {
 				 if(res.data[i].username === inputUname){
 					 exists = true;
 					 if(res.data[i].password === inputPword){
-						 this.setState({loginVisibility:false, userName: inputUname})
-						 axios.get('http://localhost:5000/employees/')
-				 		 .then(resEmployees =>{
-							 for(var j=0; j<resEmployees.data.length;j++){
-								 if(resEmployees.data[j].name === inputUname){
-									 this.setState({employee: true})
-								 }
-							 }
-						  })
+						 this.employeeCheck(inputUname);
 					 }else{
 						 alert("Wrong password");
 					 }
@@ -70,7 +77,7 @@ class LoginPage extends React.Component {
 				 axios.post('http://localhost:5000/users/add', user)
 		     		 .then(res => {
 						 console.log("User added", res.data)
-						 this.setState({loginVisibility:false, userName: inputUname})
+						 this.employeeCheck(inputUname);
 					 })
 		     		 .catch(err => console.log(err));
 			 }

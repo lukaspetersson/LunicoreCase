@@ -19,11 +19,16 @@ class FrontPage extends React.Component {
                 },
                 menuColor:"#ffffff",
                 coverHeight: 500,
+				user:{
+					username:null,
+					employee:null
+				}
             }
             this.refCarModels = React.createRef()
             this.refContact = React.createRef()
 
             this.setCoverHeight = this.setCoverHeight.bind(this);
+			this.setUser = this.setUser.bind(this);
 			this.addCar = this.addCar.bind(this);
 			this.addEmployee = this.addEmployee.bind(this);
 			this.addSale = this.addSale.bind(this);
@@ -50,6 +55,16 @@ class FrontPage extends React.Component {
 					}
 				});
        }
+
+	   setUser(user, employee){
+		   console.log("RRRRRRRR", user, employee)
+		   this.setState({
+			   user:{
+				   username:user,
+				   employee:employee
+				   }
+			   })
+	   }
 
 	   addSale(sale) {
    	   axios.post('http://localhost:5000/sales/add', sale)
@@ -89,14 +104,14 @@ class FrontPage extends React.Component {
                             <ChatBar menuColor={this.state.menuColor}/>
                         </div>
 						<div className="loginMenu">
-                             <LoginPage/>
+                             <LoginPage setUserFromParent={(user, employee)=>{this.setUser(user, employee)}}/>
                         </div>
                         <div className="WelcomeSection">
                             <CoverPage scrollfromParent={()=>{window.scrollTo(0, this.refCarModels.current.offsetTop)}} setCoverHeight={this.setCoverHeight}/>
                         </div>
 
                         <div className="contentsSections" ref={this.refCarModels}>
-                            <CarModels/>
+                            <CarModels isEmployee={this.state.user.employee}/>
                         </div>
 
 						<div className="contentsSections">

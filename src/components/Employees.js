@@ -4,17 +4,14 @@ import person_icon from "./../assets/person_icon.svg"
 import arrow_back from "./../assets/arrow_back.svg"
 import arrow_forward from "./../assets/arrow_forward.svg"
 import SmallBlock from "./SmallBlock.js";
+import axios from 'axios';
+
 
 class Employees extends React.Component {
     constructor(props){
             super(props)
             this.state = {
-                employee:{
-                    first:"Gunnar fixare",
-                    image: {
-                      front: person_icon,
-                    }
-                },
+                employees:[],
 				arrowStyle:{
 				 left:{
 				   display: "block"
@@ -27,9 +24,29 @@ class Employees extends React.Component {
             this.blocksContainerRef = React.createRef();
             this.resize = this.resize.bind(this);
             this.scrollSide = this.scrollSide.bind(this);
+			this.getEmployees = this.getEmployees.bind(this);
+
     }
 
+	getEmployees() {
+		axios.get('http://localhost:5000/employees/')
+		.then((res) =>{
+			var employees = [];
+			for(var i=0; i <res.data.length;i++){
+				var employee ={
+					first: res.data[i].name,
+					image: person_icon
+				}
+				employees[i] = employee;
+			}
+			this.setState({
+				employees: employees
+			});
+		});
+	}
+
     componentDidMount() {
+	this.getEmployees()
       this.resize.call();
       window.addEventListener('resize', this.resize)
 
@@ -64,23 +81,16 @@ class Employees extends React.Component {
       }
     }
     render() {
+		var renderEmployees = [];
+		for(var i=0; i < this.state.employees.length; i++){
+			renderEmployees[i] = <div className="employee" key={i}><SmallBlock info={this.state.employees[i]} height={"280px"}/></div>
+		}
         return (
             <div className="employeeBody">
                 <h1>Employees</h1>
                 <img alt="" className="arrowsEmployees" id="firstArrow" src={arrow_back} onClick={() => this.scrollSide(-1)} style = {this.state.arrowStyle.left}/>
                 <div className="employeeContainer" ref={this.blocksContainerRef} >
-                    <div className="employee">
-                        <SmallBlock info={this.state.employee} height={"280px"}/>
-                    </div>
-                    <div className="employee">
-                        <SmallBlock info={this.state.employee} height={"280px"}/>
-                    </div>
-                    <div className="employee">
-                        <SmallBlock info={this.state.employee} height={"280px"}/>
-                    </div>
-                    <div className="employee">
-                        <SmallBlock info={this.state.employee} height={"280px"}/>
-                    </div>
+                    {renderEmployees}
                 </div>
                 <img alt="" className="arrowsEmployees" id="secondArrow" src={arrow_forward}onClick={() => this.scrollSide(1)} style = {this.state.arrowStyle.right}/>
             </div>

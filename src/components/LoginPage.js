@@ -11,10 +11,15 @@ class LoginPage extends React.Component {
 			loginVisibility: false,
 			loginSize:null,
 			userName:null,
-			employee: false
+			employee: null
 		}
 		this.login = this.login.bind(this)
 		this.signup = this.signup.bind(this)
+		this.logout = this.logout.bind(this)
+	}
+	logout(){
+		this.props.setUserFromParent(null, null)
+		this.setState({loginVisibility:false, userName: null, employee: null})
 	}
 	login(){
 		axios.get('http://localhost:5000/users/')
@@ -146,8 +151,11 @@ class LoginPage extends React.Component {
 							<img alt="" src={person_icon} />
 							<span>{this.state.userName}</span>
 						</div>
-						<div style={{opacity: showLogin, visibility: visible, top:0, right: this.state.loginSize+"vw", left: this.state.loginSize+"vw", bottom: 20-this.state.loginSize/6+"vh"}}>
-						owqvm+omwpmv+wmåvåwmvwåv,w,å,wv
+						<div className="profile" style={{opacity: showLogin, visibility: visible, right: this.state.loginSize+"vw", left: this.state.loginSize+"vw", bottom: 20-this.state.loginSize/6+"vh"}}>
+							<div className="loginBtn"  onClick={() => this.logout()}>
+								<img alt="" src={person_icon} />
+								<span>log out</span>
+							</div>
 						</div>
 					</div>
 				);

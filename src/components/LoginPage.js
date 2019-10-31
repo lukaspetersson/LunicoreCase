@@ -15,24 +15,6 @@ class LoginPage extends React.Component {
 		}
 		this.login = this.login.bind(this)
 		this.signup = this.signup.bind(this)
-		this.employeeCheck = this.employeeCheck.bind(this)
-
-
-
-	}
-	employeeCheck(uname){
-		this.setState({loginVisibility:false, userName: uname})
-		axios.get('http://localhost:5000/employees/')
-		.then(resEmployees =>{
-			var isEmployee = false;
-			for(var j=0; j<resEmployees.data.length; j++){
-				if(resEmployees.data[j].name === uname){
-					isEmployee=true;
-					this.setState({employee: true})
-				}
-			}
-			this.props.setUserFromParent(uname, isEmployee)
-		 })
 	}
 	login(){
 		axios.get('http://localhost:5000/users/')
@@ -42,10 +24,12 @@ class LoginPage extends React.Component {
 			 var exists = false
 
 			 for(var i = 0; i < res.data.length; i++){
-				 if(res.data[i].username === inputUname){
+				 var user = res.data[i];
+				 if(user.username === inputUname){
 					 exists = true;
-					 if(res.data[i].password === inputPword){
-						 this.employeeCheck(inputUname);
+					 if(user.password === inputPword){
+						 this.props.setUserFromParent(user.username, user.employee_id)
+						 this.setState({loginVisibility:false, userName: inputUname, employee: user.employee_id})
 					 }else{
 						 alert("Wrong password");
 					 }
@@ -70,16 +54,28 @@ class LoginPage extends React.Component {
 				 }
 			 }
 			 if(!taken){
-				 const user = {
-					 username: inputUname,
-					 password: inputPword
-				 }
-				 axios.post('http://localhost:5000/users/add', user)
-		     		 .then(res => {
-						 console.log("User added", res.data)
-						 this.employeeCheck(inputUname);
-					 })
-		     		 .catch(err => console.log(err));
+				 axios.get('http://localhost:5000/employees/')
+		 		.then(resEmployees =>{
+		 			var employee_id = null;
+		 			for(var j=0; j<resEmployees.data.length; j++){
+		 				if(resEmployees.data[j].name === inputUname){
+		 					employee_id=resEmployees.data[j].id;
+		 					this.setState({employee: true})
+		 				}
+		 			}
+					const user = {
+   					 username: inputUname,
+   					 password: inputPword,
+					 employee_id: employee_id
+	   				 }
+	   				 axios.post('http://localhost:5000/users/add', user)
+	   		     		 .then(res => {
+	   						 console.log("User added", res.data)
+	   						 this.props.setUserFromParent(inputUname, employee_id)
+							 this.setState({loginVisibility:false, userName: inputUname, employee: employee_id})
+	   					 })
+	   		     		 .catch(err => console.log(err));
+		 		 })
 			 }
 		 })
 	}

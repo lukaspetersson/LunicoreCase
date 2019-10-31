@@ -10,10 +10,12 @@ router.route('/').get((req, res) => {
 router.route('/add').post((req, res) => {
 	const username = req.body.username;
 	const password = req.body.password;
+	const employee_id = req.body.employee_id;
 
 	const newUser= new User({
       username,
-      password
+      password,
+	  employee_id
     });
 
 	newUser.save()

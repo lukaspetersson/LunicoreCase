@@ -10,6 +10,7 @@ class LoginPage extends React.Component {
 		this.state = {
 			loginVisibility: false,
 			loginSize:null,
+			userName:null,
 		}
 		this.login = this.login.bind(this)
 		this.signup = this.signup.bind(this)
@@ -23,20 +24,38 @@ class LoginPage extends React.Component {
 	}
 
 	login(){
-		//this.setState({loginVisibility:false})
-			console.log("HHHHHHHåpjonå")
+		axios.get('http://localhost:5000/users/')
+		 .then(res =>{
+			 var inputUname = document.getElementById("uname").value;
+			 var inputPword = document.getElementById("pword").value;
+			 var exists = false
+
+			 for(var i = 0; i < res.data.length; i++){
+				 if(res.data[i].username === inputUname){
+					 exists = true;
+					 if(res.data[i].password === inputPword){
+						 this.setState({loginVisibility:false, userName: inputUname})
+					 }else{
+						 alert("Wrong password");
+					 }
+				 }
+			 }
+			 if(!exists){
+				 alert("User does not exist");
+			 }
+		 })
 	}
 	signup(){
 		axios.get('http://localhost:5000/users/')
 		 .then(res =>{
 			 var inputUname = document.getElementById("uname").value;
-			 var inputPword = document.getElementById("uname").value;
+			 var inputPword = document.getElementById("pword").value;
 			 var taken = false
 
 			 for(var i = 0; i < res.data.length; i++){
 				 if(res.data[i].username === inputUname){
 					 taken = true;
-					 console.log("Username already taken")
+					 alert("Username already taken");
 				 }
 			 }
 			 if(!taken){
@@ -45,7 +64,10 @@ class LoginPage extends React.Component {
 					 password: inputPword
 				 }
 				 axios.post('http://localhost:5000/users/add', user)
-		     		 .then(res => console.log("User added", res.data))
+		     		 .then(res => {
+						 console.log("User added", res.data)
+						 this.setState({loginVisibility:false, userName: inputUname})
+					 })
 		     		 .catch(err => console.log(err));
 			 }
 		 })
@@ -87,7 +109,7 @@ class LoginPage extends React.Component {
 					{background}
 					<div className="loginBtn"  onClick={() => this.setState({loginVisibility:true})}>
 						<img alt="" src={person_icon} />
-						<span>Login</span>
+						<span>{this.state.userName}</span>
 					</div>
 					<form style={{opacity: showLogin, visibility: visible, right: this.state.loginSize+"vw", left: this.state.loginSize+"vw", bottom: 20-this.state.loginSize/6+"vh"}}>
 						<div className="container" >
@@ -95,7 +117,7 @@ class LoginPage extends React.Component {
 							<input type="text" placeholder="Enter Username" id="uname" required/>
 
 							<label htmlFor="psw"><b>Password</b></label>
-							<input type="password" placeholder="Enter Password" id="psw" required/>
+							<input type="password" placeholder="Enter Password" id="pword" required/>
 							<button type="button" onClick={()=>{this.login()}}>Login</button>
 							<button type="button" style={{background:"gray"}} onClick={() => this.signup()}>Sign up</button>
 						</div>

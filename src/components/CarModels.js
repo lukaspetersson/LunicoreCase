@@ -49,7 +49,7 @@ class CarModels extends React.Component {
 
 	deleteCar(id) {
 		axios.delete('http://localhost:5000/carmodels/delete/'+id, id)
- 	   .then(res => console.log(res.data))
+ 	   .then(res => this.getCars())
  	   .catch(err => console.log(err));
 	}
 

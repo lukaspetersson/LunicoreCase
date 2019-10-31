@@ -6,6 +6,8 @@ import ContactSection from './ContactSection.js'
 import CarModels from './CarModels.js'
 import Employees from './Employees.js'
 import LoginPage from './LoginPage.js'
+import axios from 'axios';
+
 
 
 class FrontPage extends React.Component {
@@ -22,11 +24,50 @@ class FrontPage extends React.Component {
             this.refContact = React.createRef()
 
             this.setCoverHeight = this.setCoverHeight.bind(this);
+			this.addCar = this.addCar.bind(this);
+			this.addEmployee = this.addEmployee.bind(this);
+			this.addSale = this.addSale.bind(this);
         }
 
 		componentDidMount(){
                 window.addEventListener('scroll', this.scrollWindow)
+
+				let json = require('./../assets/data.json');
+				axios.get('http://localhost:5000/employees/')
+				.then(res => {
+					if(res.data.length < 1){
+						for (var i = 0; i < json.carshop.carmodels.length; i++) {
+							this.addCar(json.carshop.carmodels[i])
+						}
+						for (var j = 0; j < json.carshop.employees.length; j++) {
+							this.addEmployee(json.carshop.employees[j])
+						}
+						for (var k = 0; k < json.carshop.sales.length; k++) {
+							this.addSale(json.carshop.sales[k])
+						}
+					}else{
+						console.log("Data not empty")
+					}
+				});
        }
+
+	   addSale(sale) {
+   	   axios.post('http://localhost:5000/sales/add', sale)
+   		 .then(res => console.log("Sale added", res.data))
+   		 .catch(err => console.log(err));
+	   	}
+
+	   	addEmployee(employee) {
+	   	   axios.post('http://localhost:5000/employees/add', employee)
+	   		 .then(res => console.log("Employee added", res.data))
+	   		 .catch(err => console.log(err));
+	   	}
+
+	   	addCar(car) {
+	   	   axios.post('http://localhost:5000/carmodels/add', car)
+	   		 .then(res => console.log("Carmodel added",res.data))
+	   		 .catch(err => console.log(err));
+	   	}
 
        componentWillUnmount() {
          window.removeEventListener('scroll', this.scrollWindow)

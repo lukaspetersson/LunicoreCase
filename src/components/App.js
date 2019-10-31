@@ -61,7 +61,7 @@ class App extends React.Component {
 	}
 
 	getCar() {
-	   axios.get('http://localhost:5000/carmodels/')
+	   axios.get('http://localhost:5000/total_sales/')
 		 .then(res => console.log(res.data));
 	}
 

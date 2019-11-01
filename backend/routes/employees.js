@@ -10,10 +10,12 @@ router.route('/').get((req, res) => {
 router.route('/add').post((req, res) => {
 	const id = req.body.id;
 	const name = req.body.name;
+	const access = req.body.access;
 
 	const newEmployee = new Employee({
       id,
-      name
+      name,
+	  access
     });
 
 	newEmployee.save()

@@ -30,6 +30,7 @@ router.route('/').get((req, res) => {
 					totalSalesList[i] = {
 						id: employees[i].id,
 						name: employees[i].name,
+						access: employees[i].access,
 						total_sales: totalSales
 					}
 				}

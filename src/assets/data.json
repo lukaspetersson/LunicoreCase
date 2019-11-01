@@ -3,19 +3,23 @@
         "employees": [
             {
                 "id": 1,
-                "name": "Hjulia Styrén"
+                "name": "Hjulia Styrén",
+				"access": 1
             },
             {
                 "id": 2,
-                "name": "Antonia Cylinder"
+                "name": "Antonia Cylinder",
+				"access": 1
             },
             {
                 "id": 3,
-                "name": "Kalle Bromslöf"
+                "name": "Kalle Bromslöf",
+				"access": 0
             },
             {
                 "id": 4,
-                "name": "Johan Sportratt"
+                "name": "Johan Sportratt",
+				"access": 0
             }
         ],
         "carmodels": [
@@ -48,17 +52,17 @@
             {
                 "id": 1,
                 "employee_id": 2,
-                "carmodel_id": 3 
+                "carmodel_id": 3
             },
             {
                 "id": 2,
                 "employee_id": 4,
-                "carmodel_id": 2 
+                "carmodel_id": 2
             },
             {
                 "id": 3,
                 "employee_id": 4,
-                "carmodel_id": 4 
+                "carmodel_id": 4
             },
             {
                 "id": 4,
@@ -78,12 +82,12 @@
             {
                 "id": 7,
                 "employee_id": 2,
-                "carmodel_id": 2 
+                "carmodel_id": 2
             },
             {
                 "id": 8,
                 "employee_id": 2,
-                "carmodel_id": 3 
+                "carmodel_id": 3
             }
         ]
     }

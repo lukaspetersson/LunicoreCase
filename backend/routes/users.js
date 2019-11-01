@@ -17,14 +17,14 @@ router.route('/add').post((req, res) => {
 	const access = req.body.access;
 
 	const newUser= new User({
-      username,
-      password,
-	  employee_id,
-	  total_sales,
-	  email,
-	  name,
-	  access
-    });
+		username,
+		password,
+		employee_id,
+		total_sales,
+		email,
+		name,
+		access
+	});
 
 	newUser.save()
 	.then(employee => res.json(employee))
@@ -37,6 +37,25 @@ router.route('/delete/:username').delete((req, res) => {
 	.then(employee => res.json(employee))
 	.catch(err => res.status(400).json('Error: ' + err));
 
+});
+
+router.route('/update/:username').post((req, res) => {
+	User.findOne({username: req.params.username})
+	.then(user => {
+
+		user.username = req.body.username;
+		user.password = req.body.password;
+		user.employee_id = req.body.employee_id;
+		user.total_sales = req.body.total_sales;
+		user.email = req.body.email;
+		user.name = req.body.name;
+		user.access = req.body.access;
+
+		user.save()
+		.then(user => res.json(user))
+		.catch(err => res.status(400).json('Error: ' + err));
+	})
+	.catch(err => res.status(400).json('Error: ' + err));
 });
 
 module.exports = router;

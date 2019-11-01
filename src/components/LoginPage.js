@@ -2,6 +2,7 @@ import React from 'react';
 import './LoginPage.css';
 import person_icon from "./../assets/person_icon.svg"
 import axios from 'axios';
+import emailjs from 'emailjs-com';
 
 
 class LoginPage extends React.Component {
@@ -14,18 +15,59 @@ class LoginPage extends React.Component {
 			pwordError: false,
 			unameError: false,
 			signUp:false,
-			emailError: false
+			emailError: false,
+			forgotEmail: false
 		}
 		this.login = this.login.bind(this)
 		this.signup = this.signup.bind(this)
 		this.logout = this.logout.bind(this)
+		this.forgotPword = this.forgotPword.bind(this)
 		this.resetColor = this.resetColor.bind(this)
 		this.showSignUp = this.showSignUp.bind(this)
 		this.clearfields = this.clearfields.bind(this)
 	}
+	forgotPword(){
+		var inputForgotEmail = document.getElementById("forgotEmail").value;
+		axios.get('http://localhost:5000/users/')
+		.then((res) =>{
+			for(var i=0; i <res.data.length;i++){
+				var existingEmail = false;
+				if(res.data[i].email === inputForgotEmail){
+					existingEmail =true;
+
+					var user = res.data[i];
+					var password = Math.random().toString(36).slice(2);
+
+					const templateParams = {
+					    password: password,
+					};
+
+					user.password = password;
+
+						axios.post('http://localhost:5000/users/update/'+user.username, user)
+					   .then(res => console.log(res))
+					   .catch(err => console.log(err));
+
+						emailjs.send('gmail','12345', templateParams, 'user_qqTyLPldgE1RPWb9adcgr')
+						    .then((response) => {
+						       console.log('SUCCESS!', response.status, response.text);
+						    }, (err) => {
+						       console.log('FAILED...', err);
+						    });
+					document.getElementById("forgotEmail").value = "";
+					this.setState({loginVisibility:false, signUp: false, forgotEmail:false})
+				}
+			}
+			if(!existingEmail){
+				document.getElementById("forgotEmail").value = "";
+				this.setState({emailError:true})
+			}
+		});
+
+	}
 	logout(){
 		this.props.setUserFromParent(null)
-		this.setState({loginVisibility:false, user: null, signUp: false})
+		this.setState({loginVisibility:false, user: null, signUp: false, forgotEmail:false})
 	}
 	login(){
 		axios.get('http://localhost:5000/users/')
@@ -41,7 +83,7 @@ class LoginPage extends React.Component {
 						 exists = true;
 						 if(user.password === inputPword){
 							 this.props.setUserFromParent(user)
-							 this.setState({loginVisibility:false, user:user, signUp: false})
+							 this.setState({loginVisibility:false, user:user, signUp: false, forgotEmail:false})
 						 }else{
 							 document.getElementById("pword").value = "";
 							 this.setState({pwordError:true})
@@ -71,7 +113,7 @@ class LoginPage extends React.Component {
 				document.getElementById("uname").value = "";
 			}
 		}
-		this.setState({loginVisibility:false, unameError:false, pwordError:false, signUp: false})
+		this.setState({loginVisibility:false, unameError:false, pwordError:false,emailError:false,  signUp: false})
 	}
 	signup(){
 		if(document.getElementById("pwordSignup").value === document.getElementById("pwordconfirm").value){
@@ -189,18 +231,12 @@ class LoginPage extends React.Component {
 				var background = <div className="outsideSpaceLogin" onClick={() => this.clearfields()}></div>
 			}
 			if(!this.state.user){
-				if(!this.state.signUp){
-					var unameBorder = "#ccc";
-					var unamePlaceholder = "Skriv användarnamn"
-					if(this.state.unameError){
-						unameBorder = "red";
-						unamePlaceholder = "Användare finns inte"
-					}
-					var pwordBorder = "#ccc";
-					var pwordPlaceholder = "Skriv lösenord"
-					if(this.state.pwordError){
-						pwordBorder = "red";
-						pwordPlaceholder = "Fel lösenord"
+				if(this.state.forgotEmail){
+					var forgotemailBorder = "#ccc";
+					var forgotemailPlaceholder = "Ange din e-post"
+					if(this.state.emailError){
+						forgotemailBorder = "red";
+						forgotemailPlaceholder = "E-posten hittades inte"
 					}
 					return (
 						<div>
@@ -211,23 +247,20 @@ class LoginPage extends React.Component {
 							</div>
 							<form style={{opacity: showLogin, visibility: visible, right: this.state.loginSize+"vw", left: this.state.loginSize+"vw", bottom: 20-this.state.loginSize/6+"vh"}}>
 								<div className="container" >
-									<label ><b>Användarnamn</b></label>
-									<input onChange={()=>{this.resetColor()}} style={{borderColor: unameBorder}} type="text" placeholder={unamePlaceholder} id="uname" required/>
+									<label ><b>Få nytt lösenord på e-post</b></label>
+									<input onChange={()=>{this.resetColor()}} style={{borderColor: forgotemailBorder}} type="text" placeholder={forgotemailPlaceholder} id="forgotEmail" required/>
 
-									<label><b>Lösenord</b></label>
-									<input onChange={()=>{this.resetColor()}} style={{borderColor: pwordBorder}} type="password" placeholder={pwordPlaceholder} id="pword" required/>
-									<button type="button" onClick={()=>{this.login()}}>Login</button>
-									<button type="button" style={{background:"gray"}} onClick={() => this.showSignUp()}>Sign up</button>
+									<button type="button" onClick={()=>{this.forgotPword()}}>Skicka</button>
 								</div>
 
 								<div className="container">
-									<button type="button" className="cancelbtn" onClick={() => this.setState({loginVisibility:false, unameError:false, pwordError:false})}>Cancel</button>
-									<span className="psw">Forgot password?</span>
+									<button type="button" className="cancelbtn" onClick={() => this.setState({loginVisibility:false, unameError:false, pwordError:false, emailError:false, forgotEmail: false, signUp:false})}>Avbryt</button>
 								</div>
 							</form>
 						</div>
 					);
-				}else{
+				}
+				else if(this.state.signUp){
 					var emailBorder = "#ccc";
 					var emailPlaceholder = "Skriv e-post"
 					if(this.state.emailError){
@@ -266,9 +299,47 @@ class LoginPage extends React.Component {
 								</div>
 
 								<div className="container">
-									<button type="button" className="cancelbtn" style={{background:"#4CAF50", float: "right"}} onClick={() => this.signup()}>Sign up</button>
+									<button type="button" className="cancelbtn" style={{background:"#4CAF50", float: "right"}} onClick={() => this.signup()}>Skapa konto</button>
 
-									<button type="button" className="cancelbtn" onClick={() => this.clearfields()}>Cancel</button>
+									<button type="button" className="cancelbtn" onClick={() => this.clearfields()}>Avbryt</button>
+								</div>
+							</form>
+						</div>
+					);
+				}else{
+					var unameBorder = "#ccc";
+					var unamePlaceholder = "Skriv användarnamn"
+					if(this.state.unameError){
+						unameBorder = "red";
+						unamePlaceholder = "Användare finns inte"
+					}
+					var pwordBorder = "#ccc";
+					var pwordPlaceholder = "Skriv lösenord"
+					if(this.state.pwordError){
+						pwordBorder = "red";
+						pwordPlaceholder = "Fel lösenord"
+					}
+					return (
+						<div>
+							{background}
+							<div className="loginBtn"  onClick={() => this.setState({loginVisibility:true})}>
+								<img alt="" src={person_icon} />
+								<span>Logga in</span>
+							</div>
+							<form style={{opacity: showLogin, visibility: visible, right: this.state.loginSize+"vw", left: this.state.loginSize+"vw", bottom: 20-this.state.loginSize/6+"vh"}}>
+								<div className="container" >
+									<label ><b>Användarnamn</b></label>
+									<input onChange={()=>{this.resetColor()}} style={{borderColor: unameBorder}} type="text" placeholder={unamePlaceholder} id="uname" required/>
+
+									<label><b>Lösenord</b></label>
+									<input onChange={()=>{this.resetColor()}} style={{borderColor: pwordBorder}} type="password" placeholder={pwordPlaceholder} id="pword" required/>
+									<button type="button" onClick={()=>{this.login()}}>Logga in</button>
+									<button type="button" style={{background:"gray"}} onClick={() => this.showSignUp()}>Skapa konto</button>
+								</div>
+
+								<div className="container">
+									<button type="button" className="cancelbtn" onClick={() => this.setState({loginVisibility:false, unameError:false, pwordError:false})}>Avbryt</button>
+									<span className="psw" onClick={()=>{this.setState({forgotEmail:true})}}>Glömt lösenordet?</span>
 								</div>
 							</form>
 						</div>

@@ -1,13 +1,15 @@
 .contactBody{
  height: auto;
   color: white;
-  background-color: #344346;
+  background-color: #2b0617;
   text-align: center;
   padding: 10px;
   padding-bottom: 30px;
 }
 
 .contactBody h1{
+
+	color:white
 
 }
 

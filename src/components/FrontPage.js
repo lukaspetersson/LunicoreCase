@@ -1,7 +1,6 @@
 import React from 'react';
 import './FrontPage.css';
 import CoverPage from './CoverPage.js'
-import ChatBar from './ChatBar.js'
 import ContactSection from './ContactSection.js'
 import CarModels from './CarModels.js'
 import Employees from './Employees.js'
@@ -102,10 +101,7 @@ class FrontPage extends React.Component {
 		}
         return (
                 <div className="body">
-                        <div className="navigationMenu">
-                            <ChatBar menuColor={this.state.menuColor}/>
-                        </div>
-						<div className="loginMenu">
+    						<div className="loginMenu">
                              <LoginPage setUserFromParent={(user)=>{this.setUser(user)}}/>
                         </div>
                         <div className="WelcomeSection">

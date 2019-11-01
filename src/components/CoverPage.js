@@ -30,11 +30,13 @@ class CoverPage extends React.Component {
 			return (
 	          <div>
 	            <div className="coverBody" style={{bottom: meHeight}}>
+					<h1>LuniCar</h1>
 	                 <img alt="" className="downBtn" src={down_logo} onClick={() => this.props.scrollfromParent()} />
 	            </div>
 	            <div className="infoContainerCover" ref={this.refAboutText}>
-	              <h1>Bil-Månsson</h1>
-	              <h3>Privatleasa enkelt din nya begagnade bil med Bil-Månsson Komplett Privatleasing. Du väljer mellan 24 eller 36 månaders avtalslängd och bestämmer själv din årliga körsträcka. När avtalsperioden löpt ut lämnar du enkelt tillbaka bilen och kan ta ut en ny.</h3>
+	              <h1>Lunds universitets bilhandel</h1>
+	              <h3>LuniCar erbjuder kompetens från drivna studenter i slutet av sin utbildning inom bilbranschen.
+				  	Vi är den den blandningen mellan akademi och meckare.</h3>
 	            </div>
 	            </div>
 	        );

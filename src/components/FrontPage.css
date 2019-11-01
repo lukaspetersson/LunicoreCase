@@ -7,15 +7,15 @@ html {
     right:0;
     left:0;
     display: block;
-    background-color: #f2f2f2;
+    background-color: #f2dcd6;
     z-index: 0;
     color: #344346;;
-    font-family: Verdana;
+    font-family: Courier;
     overflow: hidden;
 }
 
 h1{
-    color: #94C3F1;
+    color: #2b0617;
     font-size:calc(1vw + 2.9vh);
 }
 

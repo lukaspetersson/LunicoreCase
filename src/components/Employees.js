@@ -83,11 +83,11 @@ class Employees extends React.Component {
     render() {
 		var renderEmployees = [];
 		for(var i=0; i < this.state.employees.length; i++){
-			renderEmployees[i] = <div className="employee" key={i}><SmallBlock info={this.state.employees[i]} height={"280px"}/></div>
+			renderEmployees[i] = <div className="employee" key={i}><SmallBlock info={this.state.employees[i]} height={"220px"}/></div>
 		}
         return (
             <div className="employeeBody">
-                <h1>Employees</h1>
+                <h1>Vi hjälper dig!</h1>
                 <img alt="" className="arrowsEmployees" id="firstArrow" src={arrow_back} onClick={() => this.scrollSide(-1)} style = {this.state.arrowStyle.left}/>
                 <div className="employeeContainer" ref={this.blocksContainerRef} >
                     {renderEmployees}

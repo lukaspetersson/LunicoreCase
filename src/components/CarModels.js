@@ -34,8 +34,8 @@ class CarModels extends React.Component {
 			var cars = [];
 			for(var i=0; i <res.data.length;i++){
 				var car ={
-					first: res.data[i].brand,
-					second: res.data[i].price,
+					first: res.data[i].brand +" "+ res.data[i].model,
+					second: res.data[i].price+"kr",
 					image: car_icon,
 					id: res.data[i].id,
 				}
@@ -92,11 +92,11 @@ class CarModels extends React.Component {
 		var renderCars = [];
 		for(var i=0; i < this.state.carmodels.length; i++){
 			var car = this.state.carmodels[i];
-			renderCars[i] = <div className="car" key={i}><SmallBlock removeFunction={(id)=>{this.deleteCar(id)}} removeOption={this.props.isEmployee} info={car} height={"280px"}/></div>
+			renderCars[i] = <div className="car" key={i}><SmallBlock removeFunction={(id)=>{this.deleteCar(id)}} removeOption={this.props.isEmployee} info={car} height={"240px"}/></div>
 		}
 		return (
 			<div className="carBody">
-			<h1>CARMODELS</h1>
+			<h1>Våra bilar</h1>
 			<img alt="" className="arrowsCar" id="firstArrow" src={arrow_back} onClick={() => this.scrollSide(-1)} style = {this.state.arrowStyle.left}/>
 			<div className="carContainer" ref={this.blocksContainerRef} >
 			{renderCars}

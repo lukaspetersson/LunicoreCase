@@ -12,17 +12,23 @@
     text-align: center;
 }
 
+.coverBody h1{
+	color:white;
+	font-size:calc(3.6vw + 3.1vh);
+	 margin-top: 20vh;
+}
+
 .infoContainerCover{
   position: absolute;
   bottom: 0;
   text-align: center;
   margin: 0;
   padding: 1% 7%;
-  background-color: #f2f2f2;
+  background-color: #f2dcd6;
 }
 
 .infoContainerCover h3{
-  color: #344346;
+  color: #2b0617;
   font-size:calc(0.6vw + 2.1vh);
   margin: 0;
 }

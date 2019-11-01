@@ -1,7 +1,7 @@
 import React from 'react';
 import './ContactSection.css';
 import email_logo from "./../assets/email_logo.png"
-import phone_logo from "./../assets/phone_logo.png"
+import location_icon from "./../assets/location_icon.png"
 
 class ContactSection extends React.Component {
     constructor(props){
@@ -11,14 +11,13 @@ class ContactSection extends React.Component {
     render() {
         return (
             <div className="contactBody">
-                <h1>Contact</h1>
                 <div className="withText">
                     <img alt="" src={email_logo}/>
-                    <p>bilmeckare@lunicore.se</p>
+                    <p>info@lunicar.se</p>
                 </div>
                 <div className="withText">
-                    <img alt="" src={phone_logo}/>
-                    <p>+46707898860</p>
+                    <img alt="" src={location_icon}/>
+                    <p>Sandgatan 2, 223 50 Lund</p>
                 </div>
             </div>
         );

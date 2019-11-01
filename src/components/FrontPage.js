@@ -96,8 +96,10 @@ class FrontPage extends React.Component {
 
     render() {
 		var isEmployee = false;
+		var isAdmin = false;
 		if(this.state.user){
 			isEmployee = this.state.user.employee_id
+			isAdmin = (this.state.user.access === 1)
 		}
         return (
                 <div className="body">
@@ -113,7 +115,7 @@ class FrontPage extends React.Component {
                         </div>
 
 						<div className="contentsSections">
-                            <Employees/>
+                            <Employees isAdmin={isAdmin}/>
                         </div>
 
                         <div className="contentsSections" ref={this.refContact}>

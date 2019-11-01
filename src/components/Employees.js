@@ -25,6 +25,7 @@ class Employees extends React.Component {
             this.resize = this.resize.bind(this);
             this.scrollSide = this.scrollSide.bind(this);
 			this.getEmployees = this.getEmployees.bind(this);
+			this.deleteEmployee = this.deleteEmployee.bind(this);
 
     }
 
@@ -35,7 +36,8 @@ class Employees extends React.Component {
 			for(var i=0; i <res.data.length;i++){
 				var employee ={
 					first: res.data[i].name,
-					image: person_icon
+					image: person_icon,
+					id: res.data[i].id
 				}
 				employees[i] = employee;
 			}
@@ -43,6 +45,13 @@ class Employees extends React.Component {
 				employees: employees
 			});
 		});
+	}
+
+	deleteEmployee(id) {
+		console.log("#####", id)
+		axios.delete('http://localhost:5000/employees/delete/'+id, id)
+ 	   .then(res => this.getEmployees())
+ 	   .catch(err => console.log(err));
 	}
 
     componentDidMount() {
@@ -83,7 +92,7 @@ class Employees extends React.Component {
     render() {
 		var renderEmployees = [];
 		for(var i=0; i < this.state.employees.length; i++){
-			renderEmployees[i] = <div className="employee" key={i}><SmallBlock info={this.state.employees[i]} height={"220px"}/></div>
+			renderEmployees[i] = <div className="employee" key={i}><SmallBlock removeFunction={(id)=>{this.deleteEmployee(id)}} removeOption={this.props.isAdmin} info={this.state.employees[i]} height={"220px"}/></div>
 		}
         return (
             <div className="employeeBody">

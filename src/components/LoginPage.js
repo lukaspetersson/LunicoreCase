@@ -60,14 +60,16 @@ class LoginPage extends React.Component {
 		document.getElementById("pword").value = "";
 	}
 	clearfields(){
-		if(this.state.signUp){
-			document.getElementById("unameSignup").value = "";
-			document.getElementById("pwordSignup").value = "";
-			document.getElementById("mailSignup").value = "";
-			document.getElementById("pwordconfirm").value = "";
-		}else{
-			document.getElementById("pword").value = "";
-			document.getElementById("uname").value = "";
+		if(!this.state.user){
+			if(this.state.signUp){
+				document.getElementById("unameSignup").value = "";
+				document.getElementById("pwordSignup").value = "";
+				document.getElementById("mailSignup").value = "";
+				document.getElementById("pwordconfirm").value = "";
+			}else{
+				document.getElementById("pword").value = "";
+				document.getElementById("uname").value = "";
+			}
 		}
 		this.setState({loginVisibility:false, unameError:false, pwordError:false, signUp: false})
 	}
@@ -95,11 +97,13 @@ class LoginPage extends React.Component {
 	 						   var employee_id = null;
 	 						   var totalSales = null;
 							   var emplyee_name = null;
+							   var emplyee_access = null;
 	 						   for(var j=0; j<resEmployees.data.length; j++){
 	 							   if(resEmployees.data[j].id == inputMail.substring(0,inputMail.indexOf("@"))){
 	 								   employee_id=resEmployees.data[j].id;
 									   emplyee_name=resEmployees.data[j].name;
 	 								   totalSales=resEmployees.data[j].total_sales;
+									   emplyee_access=resEmployees.data[j].access;
 	 							   }
 	 						   }
 	 						   const user = {
@@ -108,7 +112,8 @@ class LoginPage extends React.Component {
 	 							employee_id: employee_id,
 	 							total_sales: totalSales,
 	 							email: inputMail,
-								name:emplyee_name
+								name:emplyee_name,
+								access:emplyee_access
 	 							}
 	 							axios.post('http://localhost:5000/users/add', user)
 	 								.then(res => {

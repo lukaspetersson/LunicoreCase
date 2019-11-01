@@ -4,6 +4,7 @@ import CoverPage from './CoverPage.js'
 import ContactSection from './ContactSection.js'
 import CarModels from './CarModels.js'
 import Employees from './Employees.js'
+import UserDisplay from './UserDisplay.js'
 import LoginPage from './LoginPage.js'
 import axios from 'axios';
 
@@ -101,6 +102,10 @@ class FrontPage extends React.Component {
 			isEmployee = this.state.user.employee_id
 			isAdmin = (this.state.user.access === 1)
 		}
+		var userdisplay = null;
+		if(isAdmin){
+			userdisplay = <div className="contentsSections"><UserDisplay isAdmin={isAdmin}/></div>
+		}
         return (
                 <div className="body">
     						<div className="loginMenu">
@@ -117,6 +122,8 @@ class FrontPage extends React.Component {
 						<div className="contentsSections">
                             <Employees isAdmin={isAdmin}/>
                         </div>
+
+						{userdisplay}
 
                         <div className="contentsSections" ref={this.refContact}>
                             <ContactSection/>

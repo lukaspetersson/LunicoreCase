@@ -56,7 +56,7 @@ class LoginPage extends React.Component {
 		 })
 	}
 	showSignUp(){
-		this.setState({signUp: true})
+		this.setState({signUp: true, unameError:false, pwordError:false, emailError: false})
 		document.getElementById("pword").value = "";
 	}
 	clearfields(){

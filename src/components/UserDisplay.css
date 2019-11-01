@@ -1,0 +1,50 @@
+.usersBody{
+    margin: -15px 0;
+    height: auto;
+    margin-top: 20px;
+}
+.usersContainer{
+    display: inline-block;
+    white-space: nowrap;
+    width: 100%;
+    scroll-behavior: smooth;
+    padding: 25px 0;
+    overflow-x: scroll;
+    overflow-y: visible;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+}
+
+.usersContainer::-webkit-scrollbar {
+    display: none;
+}
+
+.users{
+    display: inline-block;
+    position: relative;
+    vertical-align:top;
+    margin: 10px;
+}
+
+.arrowsUsers{
+    position: absolute;
+    bottom: 120px;
+    width: 64px;
+    cursor: pointer;
+    z-index: 3;
+}
+#firstArrow{
+      left:10px;
+}
+#secondArrow{
+       right:10px;
+}
+
+.usersBody h1{
+  margin: 0px 10px;
+}
+
+.usersBody h3{
+  margin: 20px 10px;
+  color: #344346;
+}

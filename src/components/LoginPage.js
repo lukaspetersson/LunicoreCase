@@ -14,6 +14,7 @@ class LoginPage extends React.Component {
 			pwordError: false,
 			unameError: false,
 			signUp:false,
+			emailError: false
 		}
 		this.login = this.login.bind(this)
 		this.signup = this.signup.bind(this)
@@ -83,7 +84,8 @@ class LoginPage extends React.Component {
 					 for(var i = 0; i < res.data.length; i++){
 						 if(res.data[i].username === inputUname){
 							 taken = true;
-							 alert("Username already taken");
+							 document.getElementById("unameSignup").value = "";
+							 this.setState({unameError:true})
 						 }
 					 }
 					 if(!taken){
@@ -116,10 +118,12 @@ class LoginPage extends React.Component {
 					 }
 				 })
 			}else{
-				alert("ogiltlig epost")
+				document.getElementById("mailSignup").value = "";
+				this.setState({emailError:true})
 			}
 		}else{
-			alert("lösenordet matchar inte")
+			document.getElementById("pwordconfirm").value = "";
+			this.setState({pwordError:true})
 		}
 	}
 	componentDidMount(){
@@ -147,7 +151,7 @@ class LoginPage extends React.Component {
 	}
 
 	resetColor(){
-		this.setState({unameError:false, pwordError:false})
+		this.setState({unameError:false, pwordError:false, emailError: false})
 	}
 
 	render() {
@@ -158,21 +162,20 @@ class LoginPage extends React.Component {
 				visible = "visible"
 				var background = <div className="outsideSpaceLogin" onClick={() => this.clearfields()}></div>
 			}
-
-			var unameBorder = "#ccc";
-			var unamePlaceholder = "Skriv användarnamn"
-			if(this.state.unameError){
-				unameBorder = "red";
-				unamePlaceholder = "Användare finns inte"
-			}
-			var pwordBorder = "#ccc";
-			var pwordPlaceholder = "Skriv lösenord"
-			if(this.state.pwordError){
-				pwordBorder = "red";
-				pwordPlaceholder = "Fel lösenord"
-			}
 			if(!this.state.user){
 				if(!this.state.signUp){
+					var unameBorder = "#ccc";
+					var unamePlaceholder = "Skriv användarnamn"
+					if(this.state.unameError){
+						unameBorder = "red";
+						unamePlaceholder = "Användare finns inte"
+					}
+					var pwordBorder = "#ccc";
+					var pwordPlaceholder = "Skriv lösenord"
+					if(this.state.pwordError){
+						pwordBorder = "red";
+						pwordPlaceholder = "Fel lösenord"
+					}
 					return (
 						<div>
 							{background}
@@ -199,6 +202,24 @@ class LoginPage extends React.Component {
 						</div>
 					);
 				}else{
+					var emailBorder = "#ccc";
+					var emailPlaceholder = "Skriv e-post"
+					if(this.state.emailError){
+						emailBorder = "red";
+						emailPlaceholder = "Ogiltlig epost"
+					}
+					var signupUnameBorder = "#ccc";
+					var signupUnamePlaceholder = "Skriv användarnamn"
+					if(this.state.unameError){
+						signupUnameBorder = "red";
+						signupUnamePlaceholder = "Användare existerar redan"
+					}
+					var signupPwordBorder = "#ccc";
+					var signupPwordPlaceholder = "Skriv lösenordet igen"
+					if(this.state.pwordError){
+						signupPwordBorder = "red";
+						signupPwordPlaceholder = "Lösenord matchar inte"
+					}
 					return (
 						<div>
 							{background}
@@ -209,13 +230,13 @@ class LoginPage extends React.Component {
 							<form style={{opacity: showLogin, visibility: visible, right: this.state.loginSize+"vw", left: this.state.loginSize+"vw", bottom: 20-this.state.loginSize/6+"vh"}}>
 								<div className="container" >
 									<label ><b>Användarnamn</b></label>
-									<input type="text" placeholder="Skriv användarnamn" id="unameSignup" required/>
+									<input onChange={()=>{this.resetColor()}} style={{borderColor: signupUnameBorder}} type="text" placeholder={signupUnamePlaceholder} id="unameSignup" required/>
 									<label ><b>E-post</b></label>
-									<input type="text" placeholder="Skriv e-post" id="mailSignup" required/>
+									<input onChange={()=>{this.resetColor()}} style={{borderColor: emailBorder}} type="text" placeholder={emailPlaceholder} id="mailSignup" required/>
 
 									<label><b>Lösenord</b></label>
-									<input type="password" placeholder="Skriv lösenord" id="pwordSignup" required/>
-									<input type="password" placeholder="Skriv lösenord igen" id="pwordconfirm" required/>
+									<input onChange={()=>{this.resetColor()}} style={{borderColor: signupPwordBorder}} type="password" placeholder="Skriv lösenord" id="pwordSignup" required/>
+									<input onChange={()=>{this.resetColor()}} style={{borderColor: signupPwordBorder}} type="password" placeholder={signupPwordPlaceholder} id="pwordconfirm" required/>
 								</div>
 
 								<div className="container">

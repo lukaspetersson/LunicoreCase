@@ -8,6 +8,7 @@ const userSchema = new Schema({
 	employee_id: {type: Number},
 	total_sales: {type: Number},
 	email: {type: String, required: true, trim: true},
+	name: {type : String},
 	access: {type: Number},
 });
 

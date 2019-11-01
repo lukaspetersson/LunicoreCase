@@ -24,7 +24,7 @@ form {
 
 .profileInfo{
 	text-align: center;
-	margin-top: 20%;
+	margin-top: 30px;
 }
 
 .outsideSpaceLogin{
@@ -55,7 +55,8 @@ form {
 	display: block;
 	cursor:pointer;
 	text-align: center;
-	margin-top: 10%
+
+	background-color: #f44336;
 }
 
 .logoutBtn span{

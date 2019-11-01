@@ -290,10 +290,10 @@ class LoginPage extends React.Component {
 							<span>{this.state.user.username}</span>
 						</div>
 						<div className="profile" style={{opacity: showLogin, visibility: visible, right: this.state.loginSize+"vw", left: this.state.loginSize+"vw", bottom: 20-this.state.loginSize/6+"vh"}}>
-							<div className="logoutBtn"  onClick={() => this.logout()}>
+							<button type="button" className="logoutBtn"  onClick={() => this.logout()}>
 								<img alt="" src={person_icon} />
 								<span>Logga ut</span>
-							</div>
+							</button>
 								{profileInfo}
 						</div>
 					</div>

@@ -37,7 +37,8 @@ class Employees extends React.Component {
 				var employee ={
 					first: res.data[i].name,
 					image: person_icon,
-					id: res.data[i].id
+					id: res.data[i].id,
+					access: res.data[i].access
 				}
 				employees[i] = employee;
 			}
@@ -92,7 +93,7 @@ class Employees extends React.Component {
     render() {
 		var renderEmployees = [];
 		for(var i=0; i < this.state.employees.length; i++){
-			renderEmployees[i] = <div className="employee" key={i}><SmallBlock removeFunction={(id)=>{this.deleteEmployee(id)}} removeOption={this.props.isAdmin} info={this.state.employees[i]} height={"220px"}/></div>
+			renderEmployees[i] = <div className="employee" key={i}><SmallBlock removeFunction={(id)=>{this.deleteEmployee(id)}} removeOption={(this.props.isAdmin&&this.state.employees[i].access!==1)} info={this.state.employees[i]} height={"220px"}/></div>
 		}
         return (
             <div className="employeeBody">

@@ -36,7 +36,7 @@ class CoverPage extends React.Component {
 	            <div className="infoContainerCover" ref={this.refAboutText}>
 	              <h1>Lunds universitets bilhandel</h1>
 	              <h3>LuniCar erbjuder kompetens från drivna studenter i slutet av sin utbildning inom bilbranschen.
-				  	Vi är den den blandningen mellan akademi och meckare.</h3>
+				  	Vi är den bästa blandningen mellan akademi och meckare.</h3>
 	            </div>
 	            </div>
 	        );

@@ -7,6 +7,7 @@ const userSchema = new Schema({
 	password: {type: String, required: true, trim: true},
 	employee_id: {type: Number},
 	total_sales: {type: Number},
+	email: {type: String, required: true, trim: true},
 });
 
 const User = mongoose.model('User', userSchema);

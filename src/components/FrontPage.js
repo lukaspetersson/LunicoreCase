@@ -20,9 +20,10 @@ class FrontPage extends React.Component {
                 menuColor:"#ffffff",
                 coverHeight: 500,
 				user:{
-					username:null,
-					employee:null
-				}
+					username: null,
+					employee_id: null,
+					total_sales: null
+				},
             }
             this.refCarModels = React.createRef()
             this.refContact = React.createRef()
@@ -56,13 +57,10 @@ class FrontPage extends React.Component {
 				});
        }
 
-	   setUser(user, employee){
-		   console.log("RRRRRRRR", user, employee)
+	   setUser(user){
+		   console.log("RRRRRRRR", user)
 		   this.setState({
-			   user:{
-				   username:user,
-				   employee:employee
-				   }
+			   user:user
 			   })
 	   }
 
@@ -98,20 +96,24 @@ class FrontPage extends React.Component {
         }
 
     render() {
+		var isEmployee = false;
+		if(this.state.user){
+			isEmployee = this.state.user.employee_id
+		}
         return (
                 <div className="body">
                         <div className="navigationMenu">
                             <ChatBar menuColor={this.state.menuColor}/>
                         </div>
 						<div className="loginMenu">
-                             <LoginPage setUserFromParent={(user, employee)=>{this.setUser(user, employee)}}/>
+                             <LoginPage setUserFromParent={(user)=>{this.setUser(user)}}/>
                         </div>
                         <div className="WelcomeSection">
                             <CoverPage scrollfromParent={()=>{window.scrollTo(0, this.refCarModels.current.offsetTop)}} setCoverHeight={this.setCoverHeight}/>
                         </div>
 
                         <div className="contentsSections" ref={this.refCarModels}>
-                            <CarModels isEmployee={this.state.user.employee}/>
+                            <CarModels isEmployee={isEmployee}/>
                         </div>
 
 						<div className="contentsSections">

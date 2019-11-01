@@ -41,6 +41,14 @@ form {
 	color: white;
 }
 
+.logoutBtn{
+	position: absolute;
+	display: block;
+	top:30px;
+    right:30px;
+	cursor:pointer;
+}
+
 
 input[type=text], input[type=password] {
   width: 100%;

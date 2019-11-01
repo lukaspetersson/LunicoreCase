@@ -10,8 +10,7 @@ class LoginPage extends React.Component {
 		this.state = {
 			loginVisibility: false,
 			loginSize:null,
-			userName:null,
-			employee: null
+			user:null
 		}
 		this.login = this.login.bind(this)
 		this.signup = this.signup.bind(this)
@@ -19,7 +18,7 @@ class LoginPage extends React.Component {
 	}
 	logout(){
 		this.props.setUserFromParent(null, null)
-		this.setState({loginVisibility:false, userName: null, employee: null})
+		this.setState({loginVisibility:false, user: null})
 	}
 	login(){
 		axios.get('http://localhost:5000/users/')
@@ -33,8 +32,8 @@ class LoginPage extends React.Component {
 				 if(user.username === inputUname){
 					 exists = true;
 					 if(user.password === inputPword){
-						 this.props.setUserFromParent(user.username, user.employee_id)
-						 this.setState({loginVisibility:false, userName: inputUname, employee: user.employee_id})
+						 this.props.setUserFromParent(user)
+						 this.setState({loginVisibility:false, user:{username: inputUname, employee_id: user.employee_id, total_sales: user.total_sales}})
 					 }else{
 						 alert("Wrong password");
 					 }
@@ -59,25 +58,28 @@ class LoginPage extends React.Component {
 				 }
 			 }
 			 if(!taken){
-				 axios.get('http://localhost:5000/employees/')
+				 axios.get('http://localhost:5000/total_sales/')
 		 		.then(resEmployees =>{
 		 			var employee_id = null;
+					var totalSales = null;
 		 			for(var j=0; j<resEmployees.data.length; j++){
 		 				if(resEmployees.data[j].name === inputUname){
 		 					employee_id=resEmployees.data[j].id;
+							totalSales=resEmployees.data[j].total_sales;
 		 					this.setState({employee: true})
 		 				}
 		 			}
 					const user = {
    					 username: inputUname,
    					 password: inputPword,
-					 employee_id: employee_id
+					 employee_id: employee_id,
+					 total_sales: totalSales
 	   				 }
 	   				 axios.post('http://localhost:5000/users/add', user)
 	   		     		 .then(res => {
 	   						 console.log("User added", res.data)
-	   						 this.props.setUserFromParent(inputUname, employee_id)
-							 this.setState({loginVisibility:false, userName: inputUname, employee: employee_id})
+	   						 this.props.setUserFromParent(user)
+							 this.setState({loginVisibility:false, user:{username: inputUname, employee_id: user.employee_id, total_sales: user.total_sales}})
 	   					 })
 	   		     		 .catch(err => console.log(err));
 		 		 })
@@ -116,7 +118,7 @@ class LoginPage extends React.Component {
 				visible = "visible"
 				var background = <div className="outsideSpaceLogin" onClick={() => this.setState({loginVisibility:false})}></div>
 			}
-			if(!this.state.userName){
+			if(!this.state.user){
 				return (
 					<div>
 						{background}
@@ -144,18 +146,23 @@ class LoginPage extends React.Component {
 				);
 
 			}else{
+				var profileinfo="";
+				if(this.state.user.employee_id){
+					profileinfo = <div><p>Total Sales: {this.state.user.total_sales}</p><p>Employee id: {this.state.user.employee_id}</p></div>
+				}
 				return (
 					<div>
 						{background}
 						<div className="loginBtn"  onClick={() => this.setState({loginVisibility:true})}>
 							<img alt="" src={person_icon} />
-							<span>{this.state.userName}</span>
+							<span>{this.state.user.username}</span>
 						</div>
 						<div className="profile" style={{opacity: showLogin, visibility: visible, right: this.state.loginSize+"vw", left: this.state.loginSize+"vw", bottom: 20-this.state.loginSize/6+"vh"}}>
-							<div className="loginBtn"  onClick={() => this.logout()}>
+							<div className="logoutBtn"  onClick={() => this.logout()}>
 								<img alt="" src={person_icon} />
 								<span>log out</span>
 							</div>
+								{profileinfo}
 						</div>
 					</div>
 				);

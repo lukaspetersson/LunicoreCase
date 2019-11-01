@@ -10,11 +10,14 @@ class LoginPage extends React.Component {
 		this.state = {
 			loginVisibility: false,
 			loginSize:null,
-			user:null
+			user:null,
+			pwordError: false,
+			unameError: false
 		}
 		this.login = this.login.bind(this)
 		this.signup = this.signup.bind(this)
 		this.logout = this.logout.bind(this)
+		this.resetColor = this.resetColor.bind(this)
 	}
 	logout(){
 		this.props.setUserFromParent(null, null)
@@ -35,12 +38,14 @@ class LoginPage extends React.Component {
 						 this.props.setUserFromParent(user)
 						 this.setState({loginVisibility:false, user:{username: inputUname, employee_id: user.employee_id, total_sales: user.total_sales}})
 					 }else{
-						 alert("Wrong password");
+						 document.getElementById("pword").value = "";
+						 this.setState({pwordError:true})
 					 }
 				 }
 			 }
 			 if(!exists){
-				 alert("User does not exist");
+				 document.getElementById("uname").value = "";
+				 this.setState({unameError:true})
 			 }
 		 })
 	}
@@ -110,13 +115,30 @@ class LoginPage extends React.Component {
 		}
 	}
 
+	resetColor(){
+		this.setState({unameError:false, pwordError:false})
+	}
+
 	render() {
 			var showLogin = 0;
 			var visible = "hidden";
 			if(this.state.loginVisibility){
 				showLogin=1
 				visible = "visible"
-				var background = <div className="outsideSpaceLogin" onClick={() => this.setState({loginVisibility:false})}></div>
+				var background = <div className="outsideSpaceLogin" onClick={() => this.setState({loginVisibility:false, unameError:false, pwordError:false})}></div>
+			}
+
+			var unameBorder = "#ccc";
+			var unamePlaceholder = "Skriv användarnamn"
+			if(this.state.unameError){
+				unameBorder = "red";
+				unamePlaceholder = "Användare finns inte"
+			}
+			var pwordBorder = "#ccc";
+			var pwordPlaceholder = "Skriv lösenord"
+			if(this.state.pwordError){
+				pwordBorder = "red";
+				pwordPlaceholder = "Fel lösenord"
 			}
 			if(!this.state.user){
 				return (
@@ -128,17 +150,17 @@ class LoginPage extends React.Component {
 						</div>
 						<form style={{opacity: showLogin, visibility: visible, right: this.state.loginSize+"vw", left: this.state.loginSize+"vw", bottom: 20-this.state.loginSize/6+"vh"}}>
 							<div className="container" >
-								<label htmlFor="uname"><b>Username</b></label>
-								<input type="text" placeholder="Enter Username" id="uname" required/>
+								<label ><b>Användarnamn</b></label>
+								<input onChange={()=>{this.resetColor()}} style={{borderColor: unameBorder}} type="text" placeholder={unamePlaceholder} id="uname" required/>
 
-								<label htmlFor="psw"><b>Password</b></label>
-								<input type="password" placeholder="Enter Password" id="pword" required/>
+								<label><b>Lösenord</b></label>
+								<input onChange={()=>{this.resetColor()}} style={{borderColor: pwordBorder}} type="password" placeholder={pwordPlaceholder} id="pword" required/>
 								<button type="button" onClick={()=>{this.login()}}>Login</button>
 								<button type="button" style={{background:"gray"}} onClick={() => this.signup()}>Sign up</button>
 							</div>
 
 							<div className="container">
-								<button type="button" className="cancelbtn" onClick={() => this.setState({loginVisibility:false})}>Cancel</button>
+								<button type="button" className="cancelbtn" onClick={() => this.setState({loginVisibility:false, unameError:false, pwordError:false})}>Cancel</button>
 								<span className="psw">Forgot password?</span>
 							</div>
 						</form>

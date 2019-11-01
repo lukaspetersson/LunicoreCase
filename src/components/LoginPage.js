@@ -12,17 +12,13 @@ class LoginPage extends React.Component {
 			loginVisibility: false,
 			loginSize:null,
 			user:null,
-			pwordError: false,
-			unameError: false,
-			signUp:false,
-			emailError: false,
-			forgotEmail: false
+			errorType: null,
+			screen: "login"
 		}
 		this.login = this.login.bind(this)
 		this.signup = this.signup.bind(this)
 		this.logout = this.logout.bind(this)
 		this.forgotPword = this.forgotPword.bind(this)
-		this.resetColor = this.resetColor.bind(this)
 		this.showSignUp = this.showSignUp.bind(this)
 		this.clearfields = this.clearfields.bind(this)
 	}
@@ -55,19 +51,19 @@ class LoginPage extends React.Component {
 						       console.log('FAILED...', err);
 						    });
 					document.getElementById("forgotEmail").value = "";
-					this.setState({loginVisibility:false, signUp: false, forgotEmail:false})
+					this.setState({loginVisibility:false, screen: "login"})
 				}
 			}
 			if(!existingEmail){
 				document.getElementById("forgotEmail").value = "";
-				this.setState({emailError:true})
+				this.setState({errorType:"email"})
 			}
 		});
 
 	}
 	logout(){
 		this.props.setUserFromParent(null)
-		this.setState({loginVisibility:false, user: null, signUp: false, forgotEmail:false})
+		this.setState({loginVisibility:false, user: null, screen: "login"})
 	}
 	login(){
 		axios.get('http://localhost:5000/users/')
@@ -83,27 +79,27 @@ class LoginPage extends React.Component {
 						 exists = true;
 						 if(user.password === inputPword){
 							 this.props.setUserFromParent(user)
-							 this.setState({loginVisibility:false, user:user, signUp: false, forgotEmail:false})
+							 this.setState({loginVisibility:false, user:user, screen: "login"})
 						 }else{
 							 document.getElementById("pword").value = "";
-							 this.setState({pwordError:true})
+							 this.setState({errorType:"pword"})
 						 }
 					 }
 				 }
 				 if(!exists){
 					 document.getElementById("uname").value = "";
-					 this.setState({unameError:true})
+					 this.setState({errorType:"uname"})
 				 }
 			 }
 		 })
 	}
 	showSignUp(){
-		this.setState({signUp: true, unameError:false, pwordError:false, emailError: false})
+		this.setState({screen: "signup", errorType: null})
 		document.getElementById("pword").value = "";
 	}
 	clearfields(){
 		if(!this.state.user){
-			if(this.state.signUp){
+			if(this.state.screen === "signup"){
 				document.getElementById("unameSignup").value = "";
 				document.getElementById("pwordSignup").value = "";
 				document.getElementById("mailSignup").value = "";
@@ -113,7 +109,7 @@ class LoginPage extends React.Component {
 				document.getElementById("uname").value = "";
 			}
 		}
-		this.setState({loginVisibility:false, unameError:false, pwordError:false,emailError:false,  signUp: false})
+		this.setState({loginVisibility:false,errorType:null,  screen: "login"})
 	}
 	signup(){
 		if(document.getElementById("pwordSignup").value === document.getElementById("pwordconfirm").value){
@@ -129,7 +125,7 @@ class LoginPage extends React.Component {
 						 if(res.data[i].username === inputUname){
 							 taken = true;
 							 document.getElementById("unameSignup").value = "";
-							 this.setState({unameError:true})
+							 this.setState({errorType:"uname"})
 						 }
 					 }
 					 if(!taken){
@@ -173,6 +169,8 @@ class LoginPage extends React.Component {
  							 employee_id: null,
  							 total_sales: null,
  							 email: inputMail,
+							 name:null,
+							 access:null,
  			   				 }
  			   				 axios.post('http://localhost:5000/users/add', user)
  			   		     		 .then(res => {
@@ -187,11 +185,11 @@ class LoginPage extends React.Component {
 				 })
 			}else{
 				document.getElementById("mailSignup").value = "";
-				this.setState({emailError:true})
+				this.setState({errorType:"email"})
 			}
 		}else{
 			document.getElementById("pwordconfirm").value = "";
-			this.setState({pwordError:true})
+			this.setState({errorType:"pword"})
 		}
 	}
 	componentDidMount(){
@@ -217,159 +215,152 @@ class LoginPage extends React.Component {
 			})
 		}
 	}
-
-	resetColor(){
-		this.setState({unameError:false, pwordError:false, emailError: false})
-	}
-
 	render() {
-			var showLogin = 0;
-			var visible = "hidden";
-			if(this.state.loginVisibility){
-				showLogin=1
-				visible = "visible"
-				var background = <div className="outsideSpaceLogin" onClick={() => this.clearfields()}></div>
+		var showLogin = 0;
+		var visible = "hidden";
+		if(this.state.loginVisibility){
+			showLogin=1
+			visible = "visible"
+			var background = <div className="outsideSpaceLogin" onClick={() => this.clearfields()}></div>
+		}
+		if(this.state.user){
+			var profileInfo="";
+			var employeeInfo="";
+			if(this.state.user.employee_id){
+				employeeInfo =<div><p>{this.state.user.name}</p><p>Total försäljning: {this.state.user.total_sales}kr</p><p>Anställnings-ID: {this.state.user.employee_id}</p></div>
 			}
-			if(!this.state.user){
-				if(this.state.forgotEmail){
-					var forgotemailBorder = "#ccc";
-					var forgotemailPlaceholder = "Ange din e-post"
-					if(this.state.emailError){
-						forgotemailBorder = "red";
-						forgotemailPlaceholder = "E-posten hittades inte"
-					}
-					return (
-						<div>
-							{background}
-							<div className="loginBtn"  onClick={() => this.setState({loginVisibility:true})}>
-								<img alt="" src={person_icon} />
-								<span>Logga in</span>
-							</div>
-							<form style={{opacity: showLogin, visibility: visible, right: this.state.loginSize+"vw", left: this.state.loginSize+"vw", bottom: 20-this.state.loginSize/6+"vh"}}>
-								<div className="container" >
-									<label ><b>Få nytt lösenord på e-post</b></label>
-									<input onChange={()=>{this.resetColor()}} style={{borderColor: forgotemailBorder}} type="text" placeholder={forgotemailPlaceholder} id="forgotEmail" required/>
+			profileInfo = <div className="profileInfo"><p>{this.state.user.username}</p><p>{this.state.user.email}</p>{employeeInfo}</div>
 
-									<button type="button" onClick={()=>{this.forgotPword()}}>Skicka</button>
-								</div>
-
-								<div className="container">
-									<button type="button" className="cancelbtn" onClick={() => this.setState({loginVisibility:false, unameError:false, pwordError:false, emailError:false, forgotEmail: false, signUp:false})}>Avbryt</button>
-								</div>
-							</form>
-						</div>
-					);
-				}
-				else if(this.state.signUp){
-					var emailBorder = "#ccc";
-					var emailPlaceholder = "Skriv e-post"
-					if(this.state.emailError){
-						emailBorder = "red";
-						emailPlaceholder = "Ogiltlig epost"
-					}
-					var signupUnameBorder = "#ccc";
-					var signupUnamePlaceholder = "Skriv användarnamn"
-					if(this.state.unameError){
-						signupUnameBorder = "red";
-						signupUnamePlaceholder = "Användare existerar redan"
-					}
-					var signupPwordBorder = "#ccc";
-					var signupPwordPlaceholder = "Skriv lösenordet igen"
-					if(this.state.pwordError){
-						signupPwordBorder = "red";
-						signupPwordPlaceholder = "Lösenord matchar inte"
-					}
-					return (
-						<div>
-							{background}
-							<div className="loginBtn"  onClick={() => this.setState({loginVisibility:true})}>
-								<img alt="" src={person_icon} />
-								<span>Logga in</span>
-							</div>
-							<form style={{opacity: showLogin, visibility: visible, right: this.state.loginSize+"vw", left: this.state.loginSize+"vw", bottom: 20-this.state.loginSize/6+"vh"}}>
-								<div className="container" >
-									<label ><b>Användarnamn</b></label>
-									<input onChange={()=>{this.resetColor()}} style={{borderColor: signupUnameBorder}} type="text" placeholder={signupUnamePlaceholder} id="unameSignup" required/>
-									<label ><b>E-post</b></label>
-									<input onChange={()=>{this.resetColor()}} style={{borderColor: emailBorder}} type="text" placeholder={emailPlaceholder} id="mailSignup" required/>
-
-									<label><b>Lösenord</b></label>
-									<input onChange={()=>{this.resetColor()}} style={{borderColor: signupPwordBorder}} type="password" placeholder="Skriv lösenord" id="pwordSignup" required/>
-									<input onChange={()=>{this.resetColor()}} style={{borderColor: signupPwordBorder}} type="password" placeholder={signupPwordPlaceholder} id="pwordconfirm" required/>
-								</div>
-
-								<div className="container">
-									<button type="button" className="cancelbtn" style={{background:"#4CAF50", float: "right"}} onClick={() => this.signup()}>Skapa konto</button>
-
-									<button type="button" className="cancelbtn" onClick={() => this.clearfields()}>Avbryt</button>
-								</div>
-							</form>
-						</div>
-					);
-				}else{
-					var unameBorder = "#ccc";
-					var unamePlaceholder = "Skriv användarnamn"
-					if(this.state.unameError){
-						unameBorder = "red";
-						unamePlaceholder = "Användare finns inte"
-					}
-					var pwordBorder = "#ccc";
-					var pwordPlaceholder = "Skriv lösenord"
-					if(this.state.pwordError){
-						pwordBorder = "red";
-						pwordPlaceholder = "Fel lösenord"
-					}
-					return (
-						<div>
-							{background}
-							<div className="loginBtn"  onClick={() => this.setState({loginVisibility:true})}>
-								<img alt="" src={person_icon} />
-								<span>Logga in</span>
-							</div>
-							<form style={{opacity: showLogin, visibility: visible, right: this.state.loginSize+"vw", left: this.state.loginSize+"vw", bottom: 20-this.state.loginSize/6+"vh"}}>
-								<div className="container" >
-									<label ><b>Användarnamn</b></label>
-									<input onChange={()=>{this.resetColor()}} style={{borderColor: unameBorder}} type="text" placeholder={unamePlaceholder} id="uname" required/>
-
-									<label><b>Lösenord</b></label>
-									<input onChange={()=>{this.resetColor()}} style={{borderColor: pwordBorder}} type="password" placeholder={pwordPlaceholder} id="pword" required/>
-									<button type="button" onClick={()=>{this.login()}}>Logga in</button>
-									<button type="button" style={{background:"gray"}} onClick={() => this.showSignUp()}>Skapa konto</button>
-								</div>
-
-								<div className="container">
-									<button type="button" className="cancelbtn" onClick={() => this.setState({loginVisibility:false, unameError:false, pwordError:false})}>Avbryt</button>
-									<span className="psw" onClick={()=>{this.setState({forgotEmail:true})}}>Glömt lösenordet?</span>
-								</div>
-							</form>
-						</div>
-					);
-				}
-			}else{
-				var profileInfo="";
-				var employeeInfo="";
-				if(this.state.user.employee_id){
-					employeeInfo =<div><p>{this.state.user.name}</p><p>Total försäljning: {this.state.user.total_sales}kr</p><p>Anställnings-ID: {this.state.user.employee_id}</p></div>
-				}
-				profileInfo = <div className="profileInfo"><p>{this.state.user.username}</p><p>{this.state.user.email}</p>{employeeInfo}</div>
-
-				return (
-					<div>
-						{background}
-						<div className="loginBtn"  onClick={() => this.setState({loginVisibility:true})}>
-							<img alt="" src={person_icon} />
-							<span>{this.state.user.username}</span>
-						</div>
-						<div className="profile" style={{opacity: showLogin, visibility: visible, right: this.state.loginSize+"vw", left: this.state.loginSize+"vw", bottom: 20-this.state.loginSize/6+"vh"}}>
-							<button type="button" className="logoutBtn"  onClick={() => this.logout()}>
-								<img alt="" src={person_icon} />
-								<span>Logga ut</span>
-							</button>
-								{profileInfo}
-						</div>
+			return (
+				<div>
+					{background}
+					<div className="loginBtn"  onClick={() => this.setState({loginVisibility:true})}>
+						<img alt="" src={person_icon} />
+						<span>{this.state.user.username}</span>
 					</div>
-				);
+					<div className="profile" style={{opacity: showLogin, visibility: visible, right: this.state.loginSize+"vw", left: this.state.loginSize+"vw", bottom: 20-this.state.loginSize/6+"vh"}}>
+						<button type="button" className="logoutBtn"  onClick={() => this.logout()}>
+							<img alt="" src={person_icon} />
+							<span>Logga ut</span>
+						</button>
+							{profileInfo}
+					</div>
+				</div>
+			);
+		}
+		else if(this.state.screen === "login"){
+			var unameBorder = "#ccc";
+			var unamePlaceholder = "Skriv användarnamn"
+			if(this.state.errorType === "uname"){
+				unameBorder = "red";
+				unamePlaceholder = "Användare finns inte"
 			}
+			var pwordBorder = "#ccc";
+			var pwordPlaceholder = "Skriv lösenord"
+			if(this.state.errorType === "pword"){
+				pwordBorder = "red";
+				pwordPlaceholder = "Fel lösenord"
+			}
+			return (
+				<div>
+					{background}
+					<div className="loginBtn"  onClick={() => this.setState({loginVisibility:true})}>
+						<img alt="" src={person_icon} />
+						<span>Logga in</span>
+					</div>
+					<form style={{opacity: showLogin, visibility: visible, right: this.state.loginSize+"vw", left: this.state.loginSize+"vw", bottom: 20-this.state.loginSize/6+"vh"}}>
+						<div className="container" >
+							<label ><b>Användarnamn</b></label>
+							<input onChange={()=>{this.setState({errorType:null})}} style={{borderColor: unameBorder}} type="text" placeholder={unamePlaceholder} id="uname" required/>
+
+							<label><b>Lösenord</b></label>
+							<input onChange={()=>{this.setState({errorType:null})}} style={{borderColor: pwordBorder}} type="password" placeholder={pwordPlaceholder} id="pword" required/>
+							<button type="button" onClick={()=>{this.login()}}>Logga in</button>
+							<button type="button" style={{background:"gray"}} onClick={() => this.showSignUp()}>Skapa konto</button>
+						</div>
+						<div className="container">
+							<button type="button" className="cancelbtn" onClick={() => this.setState({loginVisibility:false, errorType:null})}>Avbryt</button>
+							<span className="psw" onClick={()=>{this.setState({screen:"forgot"})}}>Glömt lösenordet?</span>
+						</div>
+					</form>
+				</div>
+			);
+		}else if(this.state.screen === "signup"){
+			var emailBorder = "#ccc";
+			var emailPlaceholder = "Skriv e-post"
+			if(this.state.errorType === "email"){
+				emailBorder = "red";
+				emailPlaceholder = "Ogiltlig epost"
+			}
+			var signupUnameBorder = "#ccc";
+			var signupUnamePlaceholder = "Skriv användarnamn"
+			if(this.state.errorType === "uname"){
+				signupUnameBorder = "red";
+				signupUnamePlaceholder = "Användare existerar redan"
+			}
+			var signupPwordBorder = "#ccc";
+			var signupPwordPlaceholder = "Skriv lösenordet igen"
+			if(this.state.errorType === "pword"){
+				signupPwordBorder = "red";
+				signupPwordPlaceholder = "Lösenord matchar inte"
+			}
+			return (
+				<div>
+					{background}
+					<div className="loginBtn"  onClick={() => this.setState({loginVisibility:true})}>
+						<img alt="" src={person_icon} />
+						<span>Logga in</span>
+					</div>
+					<form style={{opacity: showLogin, visibility: visible, right: this.state.loginSize+"vw", left: this.state.loginSize+"vw", bottom: 20-this.state.loginSize/6+"vh"}}>
+						<div className="container" >
+							<label ><b>Användarnamn</b></label>
+							<input onChange={()=>this.setState({errorType:null})} style={{borderColor: signupUnameBorder}} type="text" placeholder={signupUnamePlaceholder} id="unameSignup" required/>
+							<label ><b>E-post</b></label>
+							<input onChange={()=>{this.setState({errorType:null})}} style={{borderColor: emailBorder}} type="text" placeholder={emailPlaceholder} id="mailSignup" required/>
+
+							<label><b>Lösenord</b></label>
+							<input onChange={()=>{this.setState({errorType:null})}} style={{borderColor: signupPwordBorder}} type="password" placeholder="Skriv lösenord" id="pwordSignup" required/>
+							<input onChange={()=>{this.setState({errorType:null})}} style={{borderColor: signupPwordBorder}} type="password" placeholder={signupPwordPlaceholder} id="pwordconfirm" required/>
+						</div>
+						<div className="container">
+							<button type="button" className="cancelbtn" style={{background:"#4CAF50", float: "right"}} onClick={() => this.signup()}>Skapa konto</button>
+
+							<button type="button" className="cancelbtn" onClick={() => this.clearfields()}>Avbryt</button>
+						</div>
+					</form>
+				</div>
+			);
+		}else if(this.state.screen === "forgot"){
+			var forgotemailBorder = "#ccc";
+			var forgotemailPlaceholder = "Ange din e-post"
+			if(this.state.errorType === "email"){
+				forgotemailBorder = "red";
+				forgotemailPlaceholder = "E-posten hittades inte"
+			}
+			return (
+				<div>
+					{background}
+					<div className="loginBtn"  onClick={() => this.setState({loginVisibility:true})}>
+						<img alt="" src={person_icon} />
+						<span>Logga in</span>
+					</div>
+					<form style={{opacity: showLogin, visibility: visible, right: this.state.loginSize+"vw", left: this.state.loginSize+"vw", bottom: 20-this.state.loginSize/6+"vh"}}>
+						<div className="container" >
+							<label ><b>Få nytt lösenord på e-post</b></label>
+							<input onChange={()=>{this.setState({errorType:null})}} style={{borderColor: forgotemailBorder}} type="text" placeholder={forgotemailPlaceholder} id="forgotEmail" required/>
+
+							<button type="button" onClick={()=>{this.forgotPword()}}>Skicka</button>
+						</div>
+
+						<div className="container">
+							<button type="button" className="cancelbtn" onClick={() => this.setState({loginVisibility:false, errorType:null, screen:"login"})}>Avbryt</button>
+						</div>
+					</form>
+				</div>
+			);
+	}else if(this.state.screen === "confirm"){
+
+	}
 	}
 }
 

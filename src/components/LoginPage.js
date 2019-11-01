@@ -124,7 +124,7 @@ class LoginPage extends React.Component {
 						{background}
 						<div className="loginBtn"  onClick={() => this.setState({loginVisibility:true})}>
 							<img alt="" src={person_icon} />
-							<span>Login</span>
+							<span>Logga in</span>
 						</div>
 						<form style={{opacity: showLogin, visibility: visible, right: this.state.loginSize+"vw", left: this.state.loginSize+"vw", bottom: 20-this.state.loginSize/6+"vh"}}>
 							<div className="container" >
@@ -148,7 +148,7 @@ class LoginPage extends React.Component {
 			}else{
 				var profileinfo="";
 				if(this.state.user.employee_id){
-					profileinfo = <div><p>Total Sales: {this.state.user.total_sales}</p><p>Employee id: {this.state.user.employee_id}</p></div>
+					profileinfo = <div className="profileInfo"><p>Total försäljning: {this.state.user.total_sales}kr</p><p>Anställnings-ID: {this.state.user.employee_id}</p></div>
 				}
 				return (
 					<div>
@@ -160,7 +160,7 @@ class LoginPage extends React.Component {
 						<div className="profile" style={{opacity: showLogin, visibility: visible, right: this.state.loginSize+"vw", left: this.state.loginSize+"vw", bottom: 20-this.state.loginSize/6+"vh"}}>
 							<div className="logoutBtn"  onClick={() => this.logout()}>
 								<img alt="" src={person_icon} />
-								<span>log out</span>
+								<span>Logga ut</span>
 							</div>
 								{profileinfo}
 						</div>

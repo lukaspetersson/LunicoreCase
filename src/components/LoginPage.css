@@ -22,6 +22,11 @@ form {
 	transition: 0.5s;
 }
 
+.profileInfo{
+	text-align: center;
+	margin-top: 25%;
+}
+
 .outsideSpaceLogin{
     position: fixed;
     right:0;
@@ -39,14 +44,25 @@ form {
     right:30px;
 	cursor:pointer;
 	color: white;
+	text-align: center;
+}
+.loginBtn span{
+	white-space: nowrap
 }
 
 .logoutBtn{
-	position: absolute;
+	position: relative;
 	display: block;
-	top:30px;
-    right:30px;
 	cursor:pointer;
+	text-align: center;
+	margin-top: 10%
+}
+
+.logoutBtn span{
+	white-space: nowrap;
+}
+.logoutBtn img{
+	vertical-align: bottom;
 }
 
 
@@ -91,6 +107,7 @@ button:hover {
 span.psw {
   float: right;
   padding-top: 16px;
+  cursor:pointer;
 }
 
 @media screen and (max-width: 300px) {

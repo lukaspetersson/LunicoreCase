@@ -89,32 +89,53 @@ class LoginPage extends React.Component {
 						 }
 					 }
 					 if(!taken){
-						 axios.get('http://localhost:5000/total_sales/')
-				 		.then(resEmployees =>{
-				 			var employee_id = null;
-							var totalSales = null;
-				 			for(var j=0; j<resEmployees.data.length; j++){
-				 				if(resEmployees.data[j].name === inputUname){
-				 					employee_id=resEmployees.data[j].id;
-									totalSales=resEmployees.data[j].total_sales;
-				 				}
-				 			}
-							const user = {
-		   					 username: inputUname,
-		   					 password: inputPword,
-							 employee_id: employee_id,
-							 total_sales: totalSales,
-							 email: inputMail,
-			   				 }
-			   				 axios.post('http://localhost:5000/users/add', user)
-			   		     		 .then(res => {
-			   						 console.log("User added", res.data)
-			   						 this.props.setUserFromParent(user)
-									 this.setState({loginVisibility:false, user:user})
-									 this.clearfields()
-			   					 })
-			   		     		 .catch(err => console.log(err));
-				 		 })
+						 if(inputMail.substring(inputMail.indexOf("@")) === "@lunicar.se"){
+							 axios.get('http://localhost:5000/total_sales/')
+	 					   .then(resEmployees =>{
+	 						   var employee_id = null;
+	 						   var totalSales = null;
+							   var emplyee_name = null;
+	 						   for(var j=0; j<resEmployees.data.length; j++){
+	 							   if(resEmployees.data[j].id == inputMail.substring(0,inputMail.indexOf("@"))){
+	 								   employee_id=resEmployees.data[j].id;
+									   emplyee_name=resEmployees.data[j].name;
+	 								   totalSales=resEmployees.data[j].total_sales;
+	 							   }
+	 						   }
+	 						   const user = {
+	 							username: inputUname,
+	 							password: inputPword,
+	 							employee_id: employee_id,
+	 							total_sales: totalSales,
+	 							email: inputMail,
+								name:emplyee_name
+	 							}
+	 							axios.post('http://localhost:5000/users/add', user)
+	 								.then(res => {
+	 									console.log("User added", res.data)
+	 									this.props.setUserFromParent(user)
+	 									this.setState({loginVisibility:false, user:user})
+	 									this.clearfields()
+	 								})
+	 								.catch(err => console.log(err));
+	 						})
+						 }else{
+							 const user = {
+ 		   					 username: inputUname,
+ 		   					 password: inputPword,
+ 							 employee_id: null,
+ 							 total_sales: null,
+ 							 email: inputMail,
+ 			   				 }
+ 			   				 axios.post('http://localhost:5000/users/add', user)
+ 			   		     		 .then(res => {
+ 			   						 console.log("User added", res.data)
+ 			   						 this.props.setUserFromParent(user)
+ 									 this.setState({loginVisibility:false, user:user})
+ 									 this.clearfields()
+ 			   					 })
+ 			   		     		 .catch(err => console.log(err));
+						 }
 					 }
 				 })
 			}else{
@@ -252,7 +273,7 @@ class LoginPage extends React.Component {
 				var profileInfo="";
 				var employeeInfo="";
 				if(this.state.user.employee_id){
-					employeeInfo =<div><p>Total försäljning: {this.state.user.total_sales}kr</p><p>Anställnings-ID: {this.state.user.employee_id}</p></div>
+					employeeInfo =<div><p>{this.state.user.name}</p><p>Total försäljning: {this.state.user.total_sales}kr</p><p>Anställnings-ID: {this.state.user.employee_id}</p></div>
 				}
 				profileInfo = <div className="profileInfo"><p>{this.state.user.username}</p><p>{this.state.user.email}</p>{employeeInfo}</div>
 

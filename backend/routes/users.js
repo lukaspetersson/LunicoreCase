@@ -13,13 +13,15 @@ router.route('/add').post((req, res) => {
 	const employee_id = req.body.employee_id;
 	const total_sales = req.body.total_sales;
 	const email = req.body.email;
+	const name = req.body.name;
 
 	const newUser= new User({
       username,
       password,
 	  employee_id,
 	  total_sales,
-	  email
+	  email,
+	  name
     });
 
 	newUser.save()

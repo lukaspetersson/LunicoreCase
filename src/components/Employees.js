@@ -49,10 +49,23 @@ class Employees extends React.Component {
 	}
 
 	deleteEmployee(id) {
-		console.log("#####", id)
 		axios.delete('http://localhost:5000/employees/delete/'+id, id)
  	   .then(res => this.getEmployees())
  	   .catch(err => console.log(err));
+
+	   axios.get('http://localhost:5000/users/')
+	   .then((res) =>{
+		   for(var i=0; i <res.data.length;i++){
+			   if(res.data[i].email === id+"@lunicar.se"){
+				   axios.delete('http://localhost:5000/users/delete/'+res.data[i].username, res.data[i].username)
+		    	   .then(res => {
+					   this.getEmployees()
+					   this.props.rerenderSwitch();
+				   })
+		    	   .catch(err => console.log(err));
+			   }
+		   }
+	   });
 	}
 
     componentDidMount() {

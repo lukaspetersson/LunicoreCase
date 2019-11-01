@@ -24,6 +24,7 @@ class FrontPage extends React.Component {
 					employee_id: null,
 					total_sales: null
 				},
+				rerenderUsers: false,
             }
             this.refCarModels = React.createRef()
             this.refContact = React.createRef()
@@ -104,7 +105,7 @@ class FrontPage extends React.Component {
 		}
 		var userdisplay = null;
 		if(isAdmin){
-			userdisplay = <div className="contentsSections"><UserDisplay isAdmin={isAdmin}/></div>
+			userdisplay = <div className="contentsSections"><UserDisplay rerenderSwitch={()=>{this.setState({rerenderUsers:false})}} rerenderprop={this.state.rerenderUsers} isAdmin={isAdmin}/></div>
 		}
         return (
                 <div className="body">
@@ -120,7 +121,7 @@ class FrontPage extends React.Component {
                         </div>
 
 						<div className="contentsSections">
-                            <Employees isAdmin={isAdmin}/>
+                            <Employees isAdmin={isAdmin} rerenderSwitch={()=>{this.setState({rerenderUsers:true})}}/>
                         </div>
 
 						{userdisplay}

@@ -55,6 +55,13 @@ class UserDisplay extends React.Component {
  	   .catch(err => console.log(err));
 	}
 
+	componentDidUpdate(){
+		if(this.props.rerenderprop){
+			this.getUsers()
+			this.props.rerenderSwitch();
+		}
+	}
+
     componentDidMount() {
 	this.getUsers()
       this.resize.call();

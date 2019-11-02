@@ -15,9 +15,11 @@ router.route('/signin/:username').get((req, res) => {
 		}else{
 			res.status(401).json('Error: Wrong password', user)
 		}
+		res.json(user)
 	})
 	.catch(err => res.status(400).json('Error: ' + err));
 });
+
 
 router.route('/add').post((req, res) => {
 	const username = req.body.username;

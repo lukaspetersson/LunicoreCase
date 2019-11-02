@@ -19,10 +19,32 @@ class LoginPage extends React.Component {
 		this.login = this.login.bind(this)
 		this.signup = this.signup.bind(this)
 		this.logout = this.logout.bind(this)
+		this.changePword = this.changePword.bind(this)
 		this.forgotPword = this.forgotPword.bind(this)
 		this.showSignUp = this.showSignUp.bind(this)
 		this.clearfields = this.clearfields.bind(this)
 		this.confirmAccount = this.confirmAccount.bind(this)
+	}
+	changePword(){
+		if(this.state.user.password === document.getElementById("pwordOld").value){
+			if(document.getElementById("pwordChange").value === document.getElementById("pwordChangeConfirm").value){
+				var user = this.state.user;
+				user.password = document.getElementById("pwordChange").value
+				axios.post('http://localhost:5000/users/update/'+user.username, user)
+			   .then(res => {
+				   this.props.setUserFromParent(user)
+				   this.setState({loginVisibility:false, user:user})
+				   this.clearfields()
+			   })
+			   .catch(err => console.log(err));
+			}else{
+				document.getElementById("pwordChangeConfirm").value = "";
+				this.setState({errorType:"newPword"})
+			}
+		}else{
+			document.getElementById("pwordOld").value = "";
+			this.setState({errorType:"oldPword"})
+		}
 	}
 	confirmAccount(){
 		var createdUser = this.state.createdUser;
@@ -169,6 +191,8 @@ class LoginPage extends React.Component {
 				document.getElementById("forgotForm").reset();
 			}else if(this.state.screen === "confirm"){
 				document.getElementById("confirmForm").reset();
+			}else if(this.state.screen === "changePword"){
+				document.getElementById("changeForm").reset();
 			}
 		}
 		this.setState({loginVisibility:false,errorType:null,  screen: "login"})
@@ -258,26 +282,64 @@ class LoginPage extends React.Component {
 
 		if(this.state.user){
 			loginBtn = <div className="loginBtn"  onClick={() => this.setState({loginVisibility:true})}><img alt="" src={person_icon} /><span>{this.state.user.username}</span></div>
-			var profileInfo="";
-			var employeeInfo="";
-			if(this.state.user.employee_id){
-				employeeInfo =<div><p>{this.state.user.name}</p><p>Total försäljning: {this.state.user.total_sales}kr</p><p>Anställnings-ID: {this.state.user.employee_id}</p></div>
-			}
-			profileInfo = <div className="profileInfo"><p>{this.state.user.username}</p><p>{this.state.user.email}</p>{employeeInfo}</div>
-
-			return (
+			if(this.state.screen === "changePword"){
+				var oldPwordBorder = "#ccc";
+				var oldPwordPlaceholder = "Skriv gammalt lösenord"
+				if(this.state.errorType === "oldPword"){
+					oldPwordBorder = "red";
+					oldPwordPlaceholder = "Fel lösenord"
+				}
+				var newPwordBorder = "#ccc";
+				var newPwordPlaceholder = "Skriv nytt lösenord igen"
+				if(this.state.errorType === "newPword"){
+					newPwordBorder = "red";
+					newPwordPlaceholder = "Lösenord matchar inte"
+				}
+				return(
 				<div>
 					{background}
 					{loginBtn}
-					<div className="profile" style={{opacity: showLogin, visibility: visible, right: this.state.loginSize+"vw", left: this.state.loginSize+"vw", bottom: 20-this.state.loginSize/6+"vh"}}>
-						<button type="button" className="logoutBtn"  onClick={() => this.logout()}>
-							<img alt="" src={person_icon} />
-							<span>Logga ut</span>
-						</button>
-							{profileInfo}
-					</div>
+					<form id="changeForm" style={{opacity: showLogin, visibility: visible, right: this.state.loginSize+"vw", left: this.state.loginSize+"vw", bottom: 20-this.state.loginSize/6+"vh"}}>
+						<div className="container" >
+							<label ><b>Gammalt lösenord</b></label>
+							<input onChange={()=>this.setState({errorType:null})} style={{borderColor: oldPwordBorder}} type="password" placeholder={oldPwordPlaceholder} id="pwordOld" required/>
+
+							<label><b>Nytt lösenord</b></label>
+							<input onChange={()=>{this.setState({errorType:null})}} style={{borderColor: newPwordBorder}} type="password" placeholder="Skriv nytt lösenord" id="pwordChange" required/>
+							<input onChange={()=>{this.setState({errorType:null})}} style={{borderColor: newPwordBorder}} type="password" placeholder={newPwordPlaceholder} id="pwordChangeConfirm" required/>
+						</div>
+						<div className="container">
+							<button type="button" className="cancelbtn" style={{background:"#4CAF50", float: "right"}} onClick={() => this.changePword()}>Ändra lösenord</button>
+
+							<button type="button" className="cancelbtn" onClick={() => this.clearfields()}>Avbryt</button>
+						</div>
+					</form>
 				</div>
 			);
+			}else{
+				var profileInfo="";
+				var employeeInfo="";
+				if(this.state.user.employee_id){
+					employeeInfo =<div><p>{this.state.user.name}</p><p>Total försäljning: {this.state.user.total_sales}kr</p><p>Anställnings-ID: {this.state.user.employee_id}</p></div>
+				}
+				profileInfo = <div className="profileInfo"><p>{this.state.user.username}</p><p>{this.state.user.email}</p>{employeeInfo}</div>
+
+				return (
+					<div>
+						{background}
+						{loginBtn}
+						<div className="profile" style={{opacity: showLogin, visibility: visible, right: this.state.loginSize+"vw", left: this.state.loginSize+"vw", bottom: 20-this.state.loginSize/6+"vh"}}>
+							<button type="button" className="logoutBtn"  onClick={() => this.logout()}>
+								<img alt="" src={person_icon} />
+								<span>Logga ut</span>
+							</button>
+							<button type="button" style={{background:"gray"}} onClick={()=>{this.setState({screen:"changePword"})}}>Ändra lösenord</button>
+
+								{profileInfo}
+						</div>
+					</div>
+				);
+			}
 		}
 		else if(this.state.screen === "login"){
 			var unameBorder = "#ccc";

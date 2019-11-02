@@ -150,32 +150,39 @@ class LoginPage extends React.Component {
 		this.setState({loginVisibility:false, user: null, screen: "login"})
 	}
 	login(){
-		axios.get('http://localhost:5000/users/')
-		 .then(res =>{
-			 var inputUname = document.getElementById("uname").value;
-			 var inputPword = document.getElementById("pword").value;
-			 if(inputUname && inputPword){
-				 var exists = false
+		var inputUname = document.getElementById("uname").value;
+		var inputPword = document.getElementById("pword").value;
 
+		if(inputUname && inputPword){
+			 axios.get('http://localhost:5000/users/')
+	 		 .then(res =>{
+				 var exists = false
+				 var user = null;
 				 for(var i = 0; i < res.data.length; i++){
-					 var user = res.data[i];
-					 if(user.username === inputUname){
+					 if(res.data[i].username === inputUname){
 						 exists = true;
-						 if(user.password === inputPword){
-							 this.props.setUserFromParent(user)
-							 this.setState({loginVisibility:false, user:user, screen: "login"})
-						 }else{
-							 document.getElementById("pword").value = "";
-							 this.setState({errorType:"pword"})
-						 }
+						 user = res.data[i];
 					 }
 				 }
-				 if(!exists){
+				 if(exists){
+					 axios.get('http://localhost:5000/users/signin/'+user.username, user)
+					 .then(res =>{
+						 this.props.setUserFromParent(user)
+						 this.setState({loginVisibility:false, user:user, screen: "login"})
+					 })
+					 .catch(res=>{
+						 console.log("HHHHHHHHHHHHHHHH", res)
+						 // if(res.status == 401){
+							//  document.getElementById("pword").value = "";
+							// this.setState({errorType:"pword"})
+						 // }
+					 })
+				 }else{
 					 document.getElementById("uname").value = "";
 					 this.setState({errorType:"uname"})
 				 }
-			 }
-		 })
+			 })
+		 }
 	}
 	showSignUp(){
 		this.setState({screen: "signup", errorType: null})
@@ -230,12 +237,12 @@ class LoginPage extends React.Component {
 								email: inputMail,
 	 					};
 
-						 emailjs.send('gmail','template_6J3S2Znq', templateParams, 'user_qqTyLPldgE1RPWb9adcgr')
- 						    .then((response) => {
- 						       console.log('SUCCESS!', response.status, response.text);
- 						    }, (err) => {
- 						       console.log('FAILED...', err);
- 						    });
+						 // emailjs.send('gmail','template_6J3S2Znq', templateParams, 'user_qqTyLPldgE1RPWb9adcgr')
+ 						 //    .then((response) => {
+ 						 //       console.log('SUCCESS!', response.status, response.text);
+ 						 //    }, (err) => {
+ 						 //       console.log('FAILED...', err);
+ 						 //    });
 					 }
 				 })
 			}else{

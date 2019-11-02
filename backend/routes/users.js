@@ -7,6 +7,18 @@ router.route('/').get((req, res) => {
 	.catch(err => res.status(400).json('Error: ' + err));
 });
 
+router.route('/signin/:username').get((req, res) => {
+	User.findOne({username: req.params.username})
+	.then(user => {
+	    if (user.validPassword(req.params.password)) {
+	        res.json(user)
+		}else{
+			res.status(401).json('Error: Wrong password', user)
+		}
+	})
+	.catch(err => res.status(400).json('Error: ' + err));
+});
+
 router.route('/add').post((req, res) => {
 	const username = req.body.username;
 	const password = req.body.password;
@@ -26,6 +38,8 @@ router.route('/add').post((req, res) => {
 		access
 	});
 
+	newUser.password = newUser.generateHash(password)
+
 	newUser.save()
 	.then(employee => res.json(employee))
 	.catch(err => res.status(400).json('Error: ' + err));
@@ -42,9 +56,8 @@ router.route('/delete/:username').delete((req, res) => {
 router.route('/update/:username').post((req, res) => {
 	User.findOne({username: req.params.username})
 	.then(user => {
-
 		user.username = req.body.username;
-		user.password = req.body.password;
+		user.password = user.generateHash(req.body.password);
 		user.employee_id = req.body.employee_id;
 		user.total_sales = req.body.total_sales;
 		user.email = req.body.email;

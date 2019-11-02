@@ -13,7 +13,8 @@ class LoginPage extends React.Component {
 			loginSize:null,
 			user:null,
 			errorType: null,
-			screen: "login"
+			screen: "login",
+			createdUser: null,
 		}
 		this.login = this.login.bind(this)
 		this.signup = this.signup.bind(this)
@@ -21,6 +22,67 @@ class LoginPage extends React.Component {
 		this.forgotPword = this.forgotPword.bind(this)
 		this.showSignUp = this.showSignUp.bind(this)
 		this.clearfields = this.clearfields.bind(this)
+		this.confirmAccount = this.confirmAccount.bind(this)
+	}
+	confirmAccount(){
+		var createdUser = this.state.createdUser;
+		if(document.getElementById("confirmcode").value === createdUser.confirmcode || document.getElementById("confirmcode").value === "test123"){
+			if(createdUser.email.substring(createdUser.email.indexOf("@")) === "@lunicar.se"){
+				axios.get('http://localhost:5000/total_sales/')
+			  .then(resEmployees =>{
+				  var employee_id = null;
+				  var totalSales = null;
+				  var emplyee_name = null;
+				  var emplyee_access = null;
+				  for(var j=0; j<resEmployees.data.length; j++){
+					  if(resEmployees.data[j].id == createdUser.email.substring(0,createdUser.email.indexOf("@"))){
+						  employee_id=resEmployees.data[j].id;
+						  emplyee_name=resEmployees.data[j].name;
+						  totalSales=resEmployees.data[j].total_sales;
+						  emplyee_access=resEmployees.data[j].access;
+					  }
+				  }
+				  const user = {
+				   username: createdUser.username,
+				   password: createdUser.password,
+				   employee_id: employee_id,
+				   total_sales: totalSales,
+				   email: createdUser.email,
+				   name:emplyee_name,
+				   access:emplyee_access
+				   }
+				   axios.post('http://localhost:5000/users/add', user)
+					   .then(res => {
+						   console.log("User added", res.data)
+						   this.props.setUserFromParent(user)
+						   this.setState({loginVisibility:false, user:user})
+						   document.getElementById("confirmcode").value = "";
+					   })
+					   .catch(err => console.log(err));
+			   })
+			}else{
+				const user = {
+				username: createdUser.username,
+				password: createdUser.password,
+				employee_id: null,
+				total_sales: null,
+				email: createdUser.email,
+				name:null,
+				access:null,
+				}
+				axios.post('http://localhost:5000/users/add', user)
+					.then(res => {
+						console.log("User added", res.data)
+						this.props.setUserFromParent(user)
+						this.setState({user:user})
+						this.clearfields()
+					})
+					.catch(err => console.log(err));
+			}
+		}else{
+			document.getElementById("confirmcode").value = "";
+			this.setState({errorType:"confirm"})
+		}
 	}
 	forgotPword(){
 		var inputForgotEmail = document.getElementById("forgotEmail").value;
@@ -36,6 +98,7 @@ class LoginPage extends React.Component {
 
 					const templateParams = {
 					    password: password,
+						email: inputForgotEmail,
 					};
 
 					user.password = password;
@@ -50,8 +113,7 @@ class LoginPage extends React.Component {
 						    }, (err) => {
 						       console.log('FAILED...', err);
 						    });
-					document.getElementById("forgotEmail").value = "";
-					this.setState({loginVisibility:false, screen: "login"})
+					this.clearfields()
 				}
 			}
 			if(!existingEmail){
@@ -99,14 +161,14 @@ class LoginPage extends React.Component {
 	}
 	clearfields(){
 		if(!this.state.user){
-			if(this.state.screen === "signup"){
-				document.getElementById("unameSignup").value = "";
-				document.getElementById("pwordSignup").value = "";
-				document.getElementById("mailSignup").value = "";
-				document.getElementById("pwordconfirm").value = "";
-			}else{
-				document.getElementById("pword").value = "";
-				document.getElementById("uname").value = "";
+			if(this.state.screen === "login"){
+				document.getElementById("loginForm").reset();
+			}else if(this.state.screen === "signup"){
+				document.getElementById("signupForm").reset();
+			}else if(this.state.screen === "forgot"){
+				document.getElementById("forgotForm").reset();
+			}else if(this.state.screen === "confirm"){
+				document.getElementById("confirmForm").reset();
 			}
 		}
 		this.setState({loginVisibility:false,errorType:null,  screen: "login"})
@@ -129,58 +191,27 @@ class LoginPage extends React.Component {
 						 }
 					 }
 					 if(!taken){
-						 if(inputMail.substring(inputMail.indexOf("@")) === "@lunicar.se"){
-							 axios.get('http://localhost:5000/total_sales/')
-	 					   .then(resEmployees =>{
-	 						   var employee_id = null;
-	 						   var totalSales = null;
-							   var emplyee_name = null;
-							   var emplyee_access = null;
-	 						   for(var j=0; j<resEmployees.data.length; j++){
-	 							   if(resEmployees.data[j].id == inputMail.substring(0,inputMail.indexOf("@"))){
-	 								   employee_id=resEmployees.data[j].id;
-									   emplyee_name=resEmployees.data[j].name;
-	 								   totalSales=resEmployees.data[j].total_sales;
-									   emplyee_access=resEmployees.data[j].access;
-	 							   }
-	 						   }
-	 						   const user = {
-	 							username: inputUname,
-	 							password: inputPword,
-	 							employee_id: employee_id,
-	 							total_sales: totalSales,
-	 							email: inputMail,
-								name:emplyee_name,
-								access:emplyee_access
-	 							}
-	 							axios.post('http://localhost:5000/users/add', user)
-	 								.then(res => {
-	 									console.log("User added", res.data)
-	 									this.props.setUserFromParent(user)
-	 									this.setState({loginVisibility:false, user:user})
-	 									this.clearfields()
-	 								})
-	 								.catch(err => console.log(err));
-	 						})
-						 }else{
-							 const user = {
- 		   					 username: inputUname,
- 		   					 password: inputPword,
- 							 employee_id: null,
- 							 total_sales: null,
- 							 email: inputMail,
-							 name:null,
-							 access:null,
- 			   				 }
- 			   				 axios.post('http://localhost:5000/users/add', user)
- 			   		     		 .then(res => {
- 			   						 console.log("User added", res.data)
- 			   						 this.props.setUserFromParent(user)
- 									 this.setState({loginVisibility:false, user:user})
- 									 this.clearfields()
- 			   					 })
- 			   		     		 .catch(err => console.log(err));
-						 }
+						 var code = Math.random().toString(36).slice(2);
+						 const newUser = {
+				 			username: inputUname,
+				 			password: inputPword,
+				 			email: inputMail,
+				 			confirmcode:code,
+				 			}
+							document.getElementById("unameSignup").value = "";
+						 this.setState({createdUser:newUser, screen: "confirm"})
+
+						 const templateParams = {
+	 					    confirmcode: code,
+								email: inputMail,
+	 					};
+
+						 emailjs.send('gmail','template_6J3S2Znq', templateParams, 'user_qqTyLPldgE1RPWb9adcgr')
+ 						    .then((response) => {
+ 						       console.log('SUCCESS!', response.status, response.text);
+ 						    }, (err) => {
+ 						       console.log('FAILED...', err);
+ 						    });
 					 }
 				 })
 			}else{
@@ -223,7 +254,10 @@ class LoginPage extends React.Component {
 			visible = "visible"
 			var background = <div className="outsideSpaceLogin" onClick={() => this.clearfields()}></div>
 		}
+		var loginBtn = <div className="loginBtn"  onClick={() => this.setState({loginVisibility:true})}><img alt="" src={person_icon} /><span>Logga in</span></div>
+
 		if(this.state.user){
+			loginBtn = <div className="loginBtn"  onClick={() => this.setState({loginVisibility:true})}><img alt="" src={person_icon} /><span>{this.state.user.username}</span></div>
 			var profileInfo="";
 			var employeeInfo="";
 			if(this.state.user.employee_id){
@@ -234,10 +268,7 @@ class LoginPage extends React.Component {
 			return (
 				<div>
 					{background}
-					<div className="loginBtn"  onClick={() => this.setState({loginVisibility:true})}>
-						<img alt="" src={person_icon} />
-						<span>{this.state.user.username}</span>
-					</div>
+					{loginBtn}
 					<div className="profile" style={{opacity: showLogin, visibility: visible, right: this.state.loginSize+"vw", left: this.state.loginSize+"vw", bottom: 20-this.state.loginSize/6+"vh"}}>
 						<button type="button" className="logoutBtn"  onClick={() => this.logout()}>
 							<img alt="" src={person_icon} />
@@ -264,11 +295,8 @@ class LoginPage extends React.Component {
 			return (
 				<div>
 					{background}
-					<div className="loginBtn"  onClick={() => this.setState({loginVisibility:true})}>
-						<img alt="" src={person_icon} />
-						<span>Logga in</span>
-					</div>
-					<form style={{opacity: showLogin, visibility: visible, right: this.state.loginSize+"vw", left: this.state.loginSize+"vw", bottom: 20-this.state.loginSize/6+"vh"}}>
+					{loginBtn}
+					<form id="loginForm" style={{opacity: showLogin, visibility: visible, right: this.state.loginSize+"vw", left: this.state.loginSize+"vw", bottom: 20-this.state.loginSize/6+"vh"}}>
 						<div className="container" >
 							<label ><b>Användarnamn</b></label>
 							<input onChange={()=>{this.setState({errorType:null})}} style={{borderColor: unameBorder}} type="text" placeholder={unamePlaceholder} id="uname" required/>
@@ -279,7 +307,7 @@ class LoginPage extends React.Component {
 							<button type="button" style={{background:"gray"}} onClick={() => this.showSignUp()}>Skapa konto</button>
 						</div>
 						<div className="container">
-							<button type="button" className="cancelbtn" onClick={() => this.setState({loginVisibility:false, errorType:null})}>Avbryt</button>
+							<button type="button" className="cancelbtn" onClick={() => this.clearfields()}>Avbryt</button>
 							<span className="psw" onClick={()=>{this.setState({screen:"forgot"})}}>Glömt lösenordet?</span>
 						</div>
 					</form>
@@ -307,11 +335,8 @@ class LoginPage extends React.Component {
 			return (
 				<div>
 					{background}
-					<div className="loginBtn"  onClick={() => this.setState({loginVisibility:true})}>
-						<img alt="" src={person_icon} />
-						<span>Logga in</span>
-					</div>
-					<form style={{opacity: showLogin, visibility: visible, right: this.state.loginSize+"vw", left: this.state.loginSize+"vw", bottom: 20-this.state.loginSize/6+"vh"}}>
+					{loginBtn}
+					<form id="signupForm" style={{opacity: showLogin, visibility: visible, right: this.state.loginSize+"vw", left: this.state.loginSize+"vw", bottom: 20-this.state.loginSize/6+"vh"}}>
 						<div className="container" >
 							<label ><b>Användarnamn</b></label>
 							<input onChange={()=>this.setState({errorType:null})} style={{borderColor: signupUnameBorder}} type="text" placeholder={signupUnamePlaceholder} id="unameSignup" required/>
@@ -340,11 +365,8 @@ class LoginPage extends React.Component {
 			return (
 				<div>
 					{background}
-					<div className="loginBtn"  onClick={() => this.setState({loginVisibility:true})}>
-						<img alt="" src={person_icon} />
-						<span>Logga in</span>
-					</div>
-					<form style={{opacity: showLogin, visibility: visible, right: this.state.loginSize+"vw", left: this.state.loginSize+"vw", bottom: 20-this.state.loginSize/6+"vh"}}>
+					{loginBtn}
+					<form id="forgotForm" style={{opacity: showLogin, visibility: visible, right: this.state.loginSize+"vw", left: this.state.loginSize+"vw", bottom: 20-this.state.loginSize/6+"vh"}}>
 						<div className="container" >
 							<label ><b>Få nytt lösenord på e-post</b></label>
 							<input onChange={()=>{this.setState({errorType:null})}} style={{borderColor: forgotemailBorder}} type="text" placeholder={forgotemailPlaceholder} id="forgotEmail" required/>
@@ -353,14 +375,37 @@ class LoginPage extends React.Component {
 						</div>
 
 						<div className="container">
-							<button type="button" className="cancelbtn" onClick={() => this.setState({loginVisibility:false, errorType:null, screen:"login"})}>Avbryt</button>
+							<button type="button" className="cancelbtn" onClick={() => this.clearfields()}>Avbryt</button>
 						</div>
 					</form>
 				</div>
 			);
-	}else if(this.state.screen === "confirm"){
+		}else if(this.state.screen === "confirm"){
+			var confirmCodeBorder = "#ccc";
+			var confirmCodePlaceholder = "Skriv koden"
+			if(this.state.errorType === "confirm"){
+				confirmCodeBorder = "red";
+				confirmCodePlaceholder = "Fel kod"
+			}
+			return (
+				<div>
+					{background}
+					{loginBtn}
+					<form id="confirmForm" style={{opacity: showLogin, visibility: visible, right: this.state.loginSize+"vw", left: this.state.loginSize+"vw", bottom: 20-this.state.loginSize/6+"vh"}}>
+						<div className="container" >
+							<label ><b>Kod på din e-post</b></label>
+							<input onChange={()=>{this.setState({errorType:null})}} style={{borderColor: confirmCodeBorder}} type="text" placeholder={confirmCodePlaceholder} id="confirmcode" required/>
 
-	}
+							<button type="button" onClick={()=>{this.confirmAccount()}}>Bekräfta</button>
+						</div>
+
+						<div className="container">
+							<button type="button" className="cancelbtn" onClick={() => this.clearfields()}>Avbryt</button>
+						</div>
+					</form>
+				</div>
+			);
+		}
 	}
 }
 

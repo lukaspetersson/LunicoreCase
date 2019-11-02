@@ -230,12 +230,12 @@ class LoginPage extends React.Component {
 								email: inputMail,
 	 					};
 
-						 // emailjs.send('gmail','template_6J3S2Znq', templateParams, 'user_qqTyLPldgE1RPWb9adcgr')
- 						 //    .then((response) => {
- 						 //       console.log('SUCCESS!', response.status, response.text);
- 						 //    }, (err) => {
- 						 //       console.log('FAILED...', err);
- 						 //    });
+						 emailjs.send('gmail','template_6J3S2Znq', templateParams, 'user_qqTyLPldgE1RPWb9adcgr')
+ 						    .then((response) => {
+ 						       console.log('SUCCESS!', response.status, response.text);
+ 						    }, (err) => {
+ 						       console.log('FAILED...', err);
+ 						    });
 					 }
 				 })
 			}else{

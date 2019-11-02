@@ -8,16 +8,17 @@ router.route('/').get((req, res) => {
 });
 
 router.route('/signin/:username').get((req, res) => {
-	User.findOne({username: req.params.username})
-	.then(user => {
-	    if (user.validPassword(req.params.password)) {
+	User.findOne({username: req.params.username}, function(err, user){
+		if (err){
+			res.json("pword")
+		}
+		if (user.validPassword(user.password)) {
 	        res.json(user)
 		}else{
-			res.status(401).json('Error: Wrong password', user)
+			res.json("pword")
 		}
-		res.json(user)
+
 	})
-	.catch(err => res.status(400).json('Error: ' + err));
 });
 
 
